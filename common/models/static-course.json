@@ -1,0 +1,36 @@
+{
+  "name": "static_course",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "description": {
+      "type": "string"
+    },
+    "course_code": {
+      "type": "string"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "professor": {
+      "type": "belongsTo",
+      "model": "professor",
+      "foreignKey": "professor_id"
+    },
+    "courseName": {
+      "type": "belongsTo",
+      "model": "course_name",
+      "foreignKey": "course_name_id"
+    },
+    "yearTerm": {
+      "type": "belongsTo",
+      "model": "year_term",
+      "foreignKey": "year_term_id"
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

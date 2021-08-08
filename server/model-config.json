@@ -34,5 +34,69 @@
   "Role": {
     "dataSource": "db",
     "public": false
+  },
+  "user": {
+    "dataSource": "liu",
+    "public": true
+  },
+  "school": {
+    "dataSource": "liu",
+    "public": true
+  },
+  "course_name": {
+    "dataSource": "liu",
+    "public": true
+  },
+  "department": {
+    "dataSource": "liu",
+    "public": true
+  },
+  "app_pool": {
+    "dataSource": "liu",
+    "public": true
+  },
+  "app_notification": {
+    "dataSource": "liu",
+    "public": true
+  },
+  "professor": {
+    "dataSource": "liu",
+    "public": true
+  },
+  "grade": {
+    "dataSource": "liu",
+    "public": true
+  },
+  "review": {
+    "dataSource": "liu",
+    "public": true
+  },
+  "review_label": {
+    "dataSource": "liu",
+    "public": true
+  },
+  "static_course": {
+    "dataSource": "liu",
+    "public": true
+  },
+  "crawl_course": {
+    "dataSource": "liu",
+    "public": true
+  },
+  "year": {
+    "dataSource": "liu",
+    "public": true
+  },
+  "term": {
+    "dataSource": "liu",
+    "public": true
+  },
+  "year_term": {
+    "dataSource": "liu",
+    "public": true
+  },
+  "watch_course": {
+    "dataSource": "liu",
+    "public": true
   }
 }

@@ -1,0 +1,24 @@
+{
+  "name": "app_notification",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "course_status": {
+      "type": "string"
+    },
+    "delivered": {
+      "type": "boolean"
+    },
+    "created": {
+      "type": "date",
+      "default": "$now"
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}

@@ -1,0 +1,33 @@
+{
+  "name": "department",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "nameAbbrev": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {
+    "professors": {
+      "type": "hasMany",
+      "model": "professor",
+      "foreignKey": "department_id"
+    },
+    "courseNames": {
+      "type": "hasMany",
+      "model": "course_name",
+      "foreignKey": "department_id"
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

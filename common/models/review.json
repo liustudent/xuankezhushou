@@ -1,0 +1,62 @@
+{
+  "name": "review",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "is_online": {
+      "type": "boolean"
+    },
+    "course_difficulty": {
+      "type": "number"
+    },
+    "course_recommend": {
+      "type": "number"
+    },
+    "prof_rate": {
+      "type": "number"
+    },
+    "prof_recommend": {
+      "type": "number"
+    },
+    "content": {
+      "type": "string"
+    },
+    "mandatary": {
+      "type": "boolean"
+    },
+    "grade_received": {
+      "type": "string"
+    },
+    "selected_labels": {
+      "type": [
+        "string"
+      ]
+    },
+    "thumbs_up": {
+      "type": "number",
+      "default": 0
+    },
+    "thumbs_down": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "validations": [],
+  "relations": {
+    "professor": {
+      "type": "belongsTo",
+      "model": "professor",
+      "foreignKey": "professor_id"
+    },
+    "courseName": {
+      "type": "belongsTo",
+      "model": "course_name",
+      "foreignKey": "course_name_id"
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

@@ -1,0 +1,24 @@
+{
+  "name": "watch_course",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {},
+  "validations": [],
+  "relations": {
+    "user": {
+      "type": "belongsTo",
+      "model": "user",
+      "foreignKey": "user_id"
+    },
+    "courseName": {
+      "type": "belongsTo",
+      "model": "course_name",
+      "foreignKey": "course_name_id"
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

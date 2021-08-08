@@ -1,0 +1,24 @@
+{
+  "name": "year",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "year": {
+      "type": "number"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "terms": {
+      "type": "hasMany",
+      "model": "term",
+      "foreignKey": "year_id",
+      "through": "year_term"
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

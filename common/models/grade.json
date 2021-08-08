@@ -1,0 +1,38 @@
+{
+  "name": "grade",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "gpa_avg": {
+      "type": "string"
+    },
+    "grade_a_count": {
+      "type": "number"
+    },
+    "grade_b_count": {
+      "type": "number"
+    },
+    "grade_c_count": {
+      "type": "number"
+    },
+    "grade_d_count": {
+      "type": "number"
+    },
+    "grade_f_count": {
+      "type": "number"
+    },
+    "grade_p_count": {
+      "type": "number"
+    },
+    "grade_np_count": {
+      "type": "number"
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}

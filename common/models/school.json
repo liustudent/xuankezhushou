@@ -1,0 +1,48 @@
+{
+  "name": "school",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "nameAbbrev": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {
+    "terms": {
+      "type": "hasMany",
+      "model": "term",
+      "foreignKey": "school_id"
+    },
+    "yearTerms": {
+      "type": "hasMany",
+      "model": "year_term",
+      "foreignKey": "school_id"
+    },
+    "departments": {
+      "type": "hasMany",
+      "model": "department",
+      "foreignKey": "school_id"
+    },
+    "courseNames": {
+      "type": "hasMany",
+      "model": "course_name",
+      "foreignKey": "school_id"
+    },
+    "professors": {
+      "type": "hasMany",
+      "model": "professor",
+      "foreignKey": "school_id"
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

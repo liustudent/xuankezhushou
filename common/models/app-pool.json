@@ -1,0 +1,26 @@
+{
+  "name": "app_pool",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "status": {
+      "type": "string"
+    },
+    "watch_num": {
+      "type": "number"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "courseNames": {
+      "type": "hasMany",
+      "model": "course_name",
+      "foreignKey": "app_pool_id"
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

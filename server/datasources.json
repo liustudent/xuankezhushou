@@ -1,6 +1,10 @@
 {
-  "db": {
-    "name": "db",
-    "connector": "memory"
+  "liu": {
+    "url": "mongodb+srv://liustudentdev:DVCrV7OHQqQkr7Dt@liustudentdev.gxntv.mongodb.net/LiuStudentDev?retryWrites=true&w=majority",
+    "database": "LiuStudentDev",
+    "password": "DVCrV7OHQqQkr7Dt",
+    "name": "liu",
+    "user": "liustudentdev",
+    "connector": "mongodb"
   }
 }

@@ -1,0 +1,43 @@
+{
+  "name": "year_term",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "school_term_id": {
+      "type": "string"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "year": {
+      "type": "belongsTo",
+      "model": "year",
+      "foreignKey": "year_id"
+    },
+    "term": {
+      "type": "belongsTo",
+      "model": "term",
+      "foreignKey": "term_id"
+    },
+    "school": {
+      "type": "belongsTo",
+      "model": "school",
+      "foreignKey": "school_id"
+    },
+    "crawlCourses": {
+      "type": "hasMany",
+      "model": "crawl_course",
+      "foreignKey": "year_term_id"
+    },
+    "staticCourses": {
+      "type": "hasMany",
+      "model": "static_course",
+      "foreignKey": "year_term_id"
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

@@ -1,0 +1,80 @@
+{
+  "name": "crawl_course",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "dept_name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "number": {
+      "type": "string"
+    },
+    "section": {
+      "type": "string"
+    },
+    "course_code": {
+      "type": "string"
+    },
+    "place": {
+      "type": "string"
+    },
+    "course_type": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string"
+    },
+    "class_day": {
+      "type": [
+        "string"
+      ]
+    },
+    "start_time": {
+      "type": "string"
+    },
+    "end_time": {
+      "type": "string"
+    },
+    "capacity": {
+      "type": "number"
+    },
+    "enrolled": {
+      "type": "number"
+    },
+    "enrolled_percent": {
+      "type": "number"
+    },
+    "waitlist": {
+      "type": "number"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "professor": {
+      "type": "belongsTo",
+      "model": "professor",
+      "foreignKey": "professor_id"
+    },
+    "courseName": {
+      "type": "belongsTo",
+      "model": "course_name",
+      "foreignKey": "course_name_id"
+    },
+    "yearTerm": {
+      "type": "belongsTo",
+      "model": "year_term",
+      "foreignKey": "year_term_id"
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

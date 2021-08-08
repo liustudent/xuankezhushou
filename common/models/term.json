@@ -1,0 +1,32 @@
+{
+  "name": "term",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "order": {
+      "type": "number"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "years": {
+      "type": "hasMany",
+      "model": "year",
+      "foreignKey": "term_id",
+      "through": "year_term"
+    },
+    "school": {
+      "type": "belongsTo",
+      "model": "school",
+      "foreignKey": "school_id"
+    }
+  },
+  "acls": [],
+  "methods": {}
+}
