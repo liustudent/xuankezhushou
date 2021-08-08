@@ -1,0 +1,38 @@
+I. 空位提醒
+1. getWacthList(ltx_school_id, ltx_userid): 
+  return list of courses:[
+    _id, course_name, course_code, class_day, start_time, end_time, status
+  ]
+  
+2. getAllDepts(ltx_school_id):
+  return list of dept_names:[
+    _id, dept_name, dept_name_abbrev
+  ]
+
+3. getCourseNames(dept_id):
+  return list of course names: [
+    _id, course_name, description, enrolled_percent
+  ]
+
+4. getCourseSections(course_name_id):
+  return list of courses: [
+  _id, course_code, section, course_type, class_day, start_time, end_time, enrolled_percent
+  ]
+
+5. addToWatchList(crawl_course_id, ltx_userid):
+  return success code
+
+6. getCrawledCourseDetails(crawl_course_id):
+  return professor_name, course_name, course_num, description, class_day, start_time, end_time, place, grade, all_grades, [list of reviews]
+
+7. removeFromWatchList(crawl_course_id, ltx_userid):
+  return success code
+
+II. 成绩分布
+1. 6-9 选课助手-成绩公布
+2. 6-8 选择学科和课号
+3. 6-12 searchProfessor()
+4. sortby: a/avg_gpa, b/reviews_score
+
+III. 课程评价
+1. rateCourse()
