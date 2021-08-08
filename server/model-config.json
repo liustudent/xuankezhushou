@@ -14,25 +14,26 @@
     ]
   },
   "User": {
-    "dataSource": "db"
+    "dataSource": "liu",
+    "public": false
   },
   "AccessToken": {
-    "dataSource": "db",
+    "dataSource": "liu",
     "public": false
   },
   "ACL": {
-    "dataSource": "db",
+    "dataSource": "liu",
     "public": false
   },
   "RoleMapping": {
-    "dataSource": "db",
+    "dataSource": "liu",
     "public": false,
     "options": {
       "strictObjectIDCoercion": true
     }
   },
   "Role": {
-    "dataSource": "db",
+    "dataSource": "liu",
     "public": false
   },
   "user": {

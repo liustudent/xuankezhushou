@@ -13,6 +13,14 @@
     "nameAbbrev": {
       "type": "string",
       "required": true
+    },
+    "current_year":{
+      "type":"string",
+      "required": true
+    },
+    "current_term":{
+      "type":"string",
+      "required": true
     }
   },
   "validations": [],
