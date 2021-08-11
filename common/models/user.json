@@ -12,13 +12,12 @@
     },
     "created": {
       "type": "date",
-      "required": true,
-      "default": "$now"
+      "default":"$now"
     }
   },
   "validations": [],
   "relations": {
-    "courseNames": {
+    "course_names": {
       "type": "hasMany",
       "model": "course_name",
       "foreignKey": "user_id",

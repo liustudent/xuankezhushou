@@ -30,7 +30,7 @@
       "model": "term",
       "foreignKey": "school_id"
     },
-    "yearTerms": {
+    "year_terms": {
       "type": "hasMany",
       "model": "year_term",
       "foreignKey": "school_id"
@@ -40,7 +40,7 @@
       "model": "department",
       "foreignKey": "school_id"
     },
-    "courseNames": {
+    "course_names": {
       "type": "hasMany",
       "model": "course_name",
       "foreignKey": "school_id"

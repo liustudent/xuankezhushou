@@ -27,12 +27,12 @@
       "model": "school",
       "foreignKey": "school_id"
     },
-    "crawlCourses": {
+    "crawl_courses": {
       "type": "hasMany",
       "model": "crawl_course",
       "foreignKey": "year_term_id"
     },
-    "staticCourses": {
+    "static_courses": {
       "type": "hasMany",
       "model": "static_course",
       "foreignKey": "year_term_id"

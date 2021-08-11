@@ -64,12 +64,12 @@
       "model": "professor",
       "foreignKey": "professor_id"
     },
-    "courseName": {
+    "course_name": {
       "type": "belongsTo",
       "model": "course_name",
       "foreignKey": "course_name_id"
     },
-    "yearTerm": {
+    "year_term": {
       "type": "belongsTo",
       "model": "year_term",
       "foreignKey": "year_term_id"

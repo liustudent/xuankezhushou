@@ -36,12 +36,12 @@
       "foreignKey": "course_name_id",
       "through": "review"
     },
-    "crawlCourses": {
+    "crawl_courses": {
       "type": "hasMany",
       "model": "crawl_course",
       "foreignKey": "course_name_id"
     },
-    "staticCourses": {
+    "static_courses": {
       "type": "hasMany",
       "model": "static_course",
       "foreignKey": "course_name_id"

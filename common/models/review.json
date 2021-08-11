@@ -51,7 +51,7 @@
       "model": "professor",
       "foreignKey": "professor_id"
     },
-    "courseName": {
+    "course_name": {
       "type": "belongsTo",
       "model": "course_name",
       "foreignKey": "course_name_id"

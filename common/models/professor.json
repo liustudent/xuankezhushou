@@ -25,17 +25,17 @@
   },
   "validations": [],
   "relations": {
-    "crawlCourses": {
+    "crawl_courses": {
       "type": "hasMany",
       "model": "crawl_course",
       "foreignKey": "professor_id"
     },
-    "staticCourses": {
+    "static_courses": {
       "type": "hasMany",
       "model": "static_course",
       "foreignKey": "professor_id"
     },
-    "courseNames": {
+    "course_names": {
       "type": "hasMany",
       "model": "course_name",
       "foreignKey": "professor_id",

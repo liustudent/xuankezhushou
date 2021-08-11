@@ -15,7 +15,7 @@
   },
   "validations": [],
   "relations": {
-    "courseNames": {
+    "course_names": {
       "type": "hasMany",
       "model": "course_name",
       "foreignKey": "app_pool_id"
