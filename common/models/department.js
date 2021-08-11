@@ -1,6 +1,7 @@
 "use strict";
 
 module.exports = function (Department) {
+  
   Department.disableRemoteMethodByName("upsert"); // disables PATCH /departments
   Department.disableRemoteMethodByName("find"); // disables GET /departments
   Department.disableRemoteMethodByName("replaceOrCreate"); // disables PUT /departments

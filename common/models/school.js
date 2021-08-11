@@ -57,6 +57,29 @@ module.exports = function (School) {
     returns: { arg: "result", type: "object" },
   });
 
+  School.getAllDepts = function (ltx_school_id, cb) {
+    let template = [
+      {
+        _id: "1",
+        dept_name: "Computer Science",
+        dept_name_abbrev: "CS",
+      },
+      {
+        _id: "2",
+        dept_name: "Mathematics",
+        dept_name_abbrev: "Math",
+      },
+    ];
+    return cb(null, template);
+  };
+
+  School.remoteMethod("getAllDepts", {
+    description: "Get all departments for a school",
+    http: { path: "/getAllDepts", verb: "post" },
+    accepts: [{ arg: "ltx_school_id", type: "string", required: true }],
+    returns: { arg: "result", type: "array" },
+  });
+
   School.disableRemoteMethodByName("upsert"); // disables PATCH /schools
   School.disableRemoteMethodByName("find"); // disables GET /schools
   School.disableRemoteMethodByName("replaceOrCreate"); // disables PUT /schools

@@ -1,6 +1,42 @@
 "use strict";
+const app = require("../../server/server");
+var util = require("../utils/util");
 module.exports = function (User) {
-  User.apiName = function (ltx_userid, cb) {
+  // 创建新的账号的时候，分配它们的role
+  User.observe("after save", function (ctx, next) {
+    if (ctx.isNewInstance) {
+      // var objects = { email: ctx.instance.email };
+
+      ctx.instance.__create__accessTokens({}, function (err, token) {
+        if (err) return next();
+        ctx.instance["accessToken"] = token.id;
+      });
+
+      var Role = app.models.Role;
+      var RoleMapping = app.models.RoleMapping;
+      let roleName = "normal";
+      if (ctx.instance.roleName) {
+        roleName = ctx.instance.roleName;
+      }
+      Role.findById(util.roles[roleName], function (err, role) {
+        if (err) return next(err);
+        if (role) {
+          role.principals.create(
+            {
+              principalType: RoleMapping.USER,
+              principalId: ctx.instance.id,
+            },
+            function (err, principal) {
+              if (err) return next(err);
+              console.log("Created principal:", principal);
+              return next();
+            }
+          );
+        } else return next(new Error("Role not found"));
+      });
+    } else next();
+  });
+  User.getWatchList = function (ltx_userid, cb) {
     let template = [
       {
         _id: "1",
@@ -24,17 +60,17 @@ module.exports = function (User) {
     return cb(null, template);
   };
 
-  User.remoteMethod("apiName", {
-    description: "API creation example",
-    http: { path: "/apiName", verb: "post" },
+  User.remoteMethod("getWatchList", {
+    description: "Get watch list for a user",
+    http: { path: "/getWatchList", verb: "post" },
     accepts: [{ arg: "ltx_userid", type: "string", required: true }],
     returns: { arg: "result", type: "array" },
   });
 
   User.disableRemoteMethodByName("upsert"); // disables PATCH /users
-  User.disableRemoteMethodByName("find"); // disables GET /users
+    User.disableRemoteMethodByName("find"); // disables GET /users
   User.disableRemoteMethodByName("replaceOrCreate"); // disables PUT /users
-  User.disableRemoteMethodByName("create"); // disables POST /users
+    User.disableRemoteMethodByName("create"); // disables POST /users
   User.disableRemoteMethodByName("prototype.updateAttributes"); // disables PATCH /users/{id}
   User.disableRemoteMethodByName("findById"); // disables GET /users/{id}
   User.disableRemoteMethodByName("exists"); // disables HEAD /users/{id}
