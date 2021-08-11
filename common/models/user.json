@@ -41,6 +41,20 @@
       "principalId": "normal",
       "permission": "ALLOW",
       "property": "getWatchList"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "normal",
+      "permission": "ALLOW",
+      "property": "addToWatchList"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "normal",
+      "permission": "ALLOW",
+      "property": "removeFromWatchList"
     }
   ],
   "methods": {}

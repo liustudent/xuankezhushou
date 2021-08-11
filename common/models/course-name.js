@@ -1,6 +1,45 @@
 "use strict";
 
 module.exports = function (Coursename) {
+  Coursename.getCourseSections = function (course_name_id, cb) {
+    if (course_name_id=="1"){
+      let errObj = new Error();
+          errObj.name = "CourseName Not Exist";
+          errObj.message = "CourseName Not Exist"
+          errObj.status = 404;
+          return cb(errObj);
+    }
+    let template = [
+      {
+        _id: "1",
+        course_code:"12345",
+        section:"A",
+        course_type:"Lec",
+        class_day:["M","W","F"],
+        start_time:"10:00",
+        end_time:"11:00",
+        enrolled_percent:"50"
+      },
+      {
+        _id: "2",
+        course_code:"54321",
+        section:"Z",
+        course_type:"Dis",
+        class_day:["M","W"],
+        start_time:"9:00",
+        end_time:"10:00",
+        enrolled_percent:"70"
+      },
+    ];
+    return cb(null, template);
+  };
+
+  Coursename.remoteMethod("getCourseSections", {
+    description: "Get all sections for a course",
+    http: { path: "/getCourseSections", verb: "post" },
+    accepts: [{ arg: "course_name_id", type: "string", required: true }],
+    returns: { arg: "result", type: "array" },
+  });
   Coursename.disableRemoteMethodByName("upsert"); // disables PATCH /course_names
   Coursename.disableRemoteMethodByName("find"); // disables GET /course_names
   Coursename.disableRemoteMethodByName("replaceOrCreate"); // disables PUT /course_names

@@ -58,6 +58,13 @@ module.exports = function (School) {
   });
 
   School.getAllDepts = function (ltx_school_id, cb) {
+    if (ltx_school_id=="1"){
+      let errObj = new Error();
+          errObj.name = "School Not Exist";
+          errObj.message = "School Not Exist"
+          errObj.status = 404;
+          return cb(errObj);
+    }
     let template = [
       {
         _id: "1",

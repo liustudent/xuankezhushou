@@ -1,23 +1,39 @@
+不会过期的accessToken: 4u2jFQom3aPzxoaSDQHrVsC0bTWVngsRMYXukfILfoKhP3hrs07aaXftdccU1BDL
+
+
+
 I. 空位提醒
-1. getWacthList(ltx_school_id, ltx_userid): 
-  return list of courses:[
+1. getWacthList(ltx_userid): 
+  return list of course Objects:[
     _id, course_name, course_code, class_day, start_time, end_time, status
   ]
+POST /users/getWatchList
+If want to simulate an invalid ltx_userid, just let ltx_userid="1" and run it to get result
+
   
 2. getAllDepts(ltx_school_id):
-  return list of dept_names:[
+  return list of dept_name Objects:[
     _id, dept_name, dept_name_abbrev
   ]
+POST /schools/getAllDepts
+If want to simulate an invalid ltx_school_id, just let ltx_school_id="1" and run it to get result
+
 
 3. getCourseNames(dept_id):
-  return list of course names: [
+  return list of course names Objects: [
     _id, course_name, description, enrolled_percent
   ]
+POST /departments/getCourseNames
+If want to simulate an invalid dept_id, just let dept_id="1" and run it to get result
+
 
 4. getCourseSections(course_name_id):
-  return list of courses: [
+  return list of course objects: [
   _id, course_code, section, course_type, class_day, start_time, end_time, enrolled_percent
   ]
+POST /course_names/getCourseSections
+If want to simulate an invalid course_name_id, just let course_name_id="1" and run it to get result
+
 
 5. addToWatchList(crawl_course_id, ltx_userid):
   return success code
