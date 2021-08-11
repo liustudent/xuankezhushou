@@ -74,7 +74,7 @@ module.exports = function (User) {
     returns: { arg: "result", type: "array" },
   });
 
-  User.addToWatchList = function (ltx_userid,crawl_course_id, cb) {
+  User.addToWatchList = function (ltx_userid, crawl_course_id, cb) {
     if (ltx_userid == "1") {
       let errObj = new Error();
       errObj.name = "User Not Exist";
@@ -89,19 +89,21 @@ module.exports = function (User) {
       errObj.status = 405;
       return cb(errObj);
     }
-    let template = "success"
+    let template = "success";
     return cb(null, template);
   };
 
   User.remoteMethod("addToWatchList", {
     description: "add a course to watch list for a user",
     http: { path: "/addToWatchList", verb: "post" },
-    accepts: [{ arg: "ltx_userid", type: "string", required: true },
-    { arg: "crawl_course_id", type: "string", required: true }],
+    accepts: [
+      { arg: "ltx_userid", type: "string", required: true },
+      { arg: "crawl_course_id", type: "string", required: true },
+    ],
     returns: { arg: "result", type: "string" },
   });
 
-  User.removeFromWatchList = function (ltx_userid,crawl_course_id, cb) {
+  User.removeFromWatchList = function (ltx_userid, crawl_course_id, cb) {
     if (ltx_userid == "1") {
       let errObj = new Error();
       errObj.name = "User Not Exist";
@@ -116,15 +118,18 @@ module.exports = function (User) {
       errObj.status = 405;
       return cb(errObj);
     }
-    let template = "success"
+
+    let template = "success";
     return cb(null, template);
   };
 
   User.remoteMethod("removeFromWatchList", {
     description: "remove a course from watch list for a user",
     http: { path: "/removeFromWatchList", verb: "post" },
-    accepts: [{ arg: "ltx_userid", type: "string", required: true },
-    { arg: "crawl_course_id", type: "string", required: true }],
+    accepts: [
+      { arg: "ltx_userid", type: "string", required: true },
+      { arg: "crawl_course_id", type: "string", required: true },
+    ],
     returns: { arg: "result", type: "string" },
   });
 
