@@ -19,6 +19,11 @@ module.exports = function (Department) {
         errObj.message = "Empty list but it should not be empty";
         errObj.status = 420;
         return cb(errObj);
+      } else {
+        errObj.name = "Invalid error test";
+        errObj.message = "Invalid error test";
+        errObj.status = 499;
+        return cb(errObj);
       }
     }
     let template = [

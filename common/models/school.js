@@ -75,6 +75,11 @@ module.exports = function (School) {
         errObj.message = "Empty list but it should not be empty";
         errObj.status = 420;
         return cb(errObj);
+      } else {
+        errObj.name = "Invalid error test";
+        errObj.message = "Invalid error test";
+        errObj.status = 499;
+        return cb(errObj);
       }
     }
     let template = [
@@ -135,6 +140,11 @@ module.exports = function (School) {
         errObj.name = "Empty list but it should not be empty";
         errObj.message = "Empty list but it should not be empty";
         errObj.status = 420;
+        return cb(errObj);
+      } else {
+        errObj.name = "Invalid error test";
+        errObj.message = "Invalid error test";
+        errObj.status = 499;
         return cb(errObj);
       }
     }
@@ -247,7 +257,7 @@ module.exports = function (School) {
 
   School.remoteMethod("searchProfs", {
     description:
-      "6-8 搜索教授, 该API用于6-8的“教授”按钮，返回内容包括状态code和data，返回内容需要在6-9后创建一个新页面。",
+      "6-8/6-16 搜索教授, 该API用于6-8的“教授”按钮，返回内容包括状态code和data，返回内容需要在6-9后创建一个新页面。",
     http: { path: "/searchProfs", verb: "post" },
     accepts: [
       {
@@ -321,56 +331,7 @@ module.exports = function (School) {
     returns: { arg: "result", type: "array" },
   });
 
-  School.searchProfs = function (ltx_school_id, keyword, cb) {
-    if (ltx_school_id == "1") {
-      let errObj = new Error();
-      errObj.name = "School Not Exist";
-      errObj.message = "School Not Exist";
-      errObj.status = 404;
-      return cb(errObj);
-    }
-    if (keyword == "1") {
-      let errObj = new Error();
-      errObj.name = "No such professor";
-      errObj.message = "No such professor";
-      errObj.status = 405;
-      return cb(errObj);
-    }
 
-    let template = [
-      {
-        prof_id: "603502e021778663b01a974f",
-        prof_name: "Peter, W.",
-        belong_dept_name: "ANTHRO",
-      },
-      {
-        prof_id: "603502e021778663b01a974f",
-        prof_name: "Pattis, R.",
-        belong_dept_name: "COMPSCI",
-      },
-    ];
-    return cb(null, template);
-  };
-
-  School.remoteMethod("searchProfs", {
-    description: "6-8/6-16 搜索教授",
-    http: { path: "/searchProfs", verb: "post" },
-    accepts: [
-      {
-        arg: "ltx_school_id",
-        type: "string",
-        required: true,
-        description: "留同学App中定义的学校ID",
-      },
-      {
-        arg: "keyword",
-        type: "string",
-        required: true,
-        description: "关键词用于检索教授",
-      },
-    ],
-    returns: { arg: "result", type: "array" },
-  });
 
   School.disableRemoteMethodByName("upsert"); // disables PATCH /schools
   School.disableRemoteMethodByName("find"); // disables GET /schools

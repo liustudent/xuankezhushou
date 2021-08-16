@@ -19,6 +19,11 @@ module.exports = function (Crawlcourse) {
         errObj.message = "Invalid crawl course";
         errObj.status = 414;
         return cb(errObj);
+      } else {
+        errObj.name = "Invalid error test";
+        errObj.message = "Invalid error test";
+        errObj.status = 499;
+        return cb(errObj);
       }
     }
     let template = {

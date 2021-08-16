@@ -89,6 +89,14 @@ module.exports = function (Coursename) {
     error_test,
     cb
   ) {
+    if (!course_name_ids && !prof_id) {
+      let errObj = new Error();
+      errObj.name = "Empty field";
+      errObj.message = "Empty field";
+      errObj.status = 422;
+      return cb(errObj);
+    }
+
     if (error_test) {
       let errObj = new Error();
       if (error_test == 1) {

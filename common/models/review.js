@@ -21,32 +21,35 @@ module.exports = function (Review) {
         return cb(errObj);
       }
     }
+    let template = "success";
+    return cb(null, template);
+  }
 
-    Review.remoteMethod("thumbsDown", {
-      description: "评论点踩",
-      http: { path: "/thumbsDown", verb: "post" },
-      accepts: [
-        {
-          arg: "review_id",
-          type: "string",
-          required: true,
-          description: "评论ID",
-        },
-        {
-          arg: "user_id",
-          type: "string",
-          required: true,
-          description: "用户ID",
-        },
-        {
-          arg: "error_test",
-          type: "number",
-          required: false,
-        },
-      ],
-      returns: { arg: "result", type: "string" },
-    });
-  };
+  Review.remoteMethod("thumbsDown", {
+    description: "评论点踩",
+    http: { path: "/thumbsDown", verb: "post" },
+    accepts: [
+      {
+        arg: "review_id",
+        type: "string",
+        required: true,
+        description: "评论ID",
+      },
+      {
+        arg: "user_id",
+        type: "string",
+        required: true,
+        description: "用户ID",
+      },
+      {
+        arg: "error_test",
+        type: "number",
+        required: false,
+      },
+    ],
+    returns: { arg: "result", type: "string" },
+  });
+
 
   Review.report = function (review_id, user_id, error_test, cb) {
     if (error_test) {
@@ -169,7 +172,20 @@ module.exports = function (Review) {
         errObj.message = "Invalid user";
         errObj.status = 410;
         return cb(errObj);
-      } else {
+      } 
+      else if (error_test == 2) {
+        errObj.name = "Invalid course name";
+        errObj.message = "Invalid course name";
+        errObj.status = 413;
+        return cb(errObj);
+      } 
+      else if (error_test == 3) {
+        errObj.name = "Invalid professor";
+        errObj.message = "Invalid professor";
+        errObj.status = 415;
+        return cb(errObj);
+      } 
+      else {
         errObj.name = "Invalid error test";
         errObj.message = "Invalid error test";
         errObj.status = 499;
@@ -182,7 +198,7 @@ module.exports = function (Review) {
 
   Review.remoteMethod("rateCourse", {
     description: "评论点赞",
-    http: { path: "/rateCourse", verb: "get" },
+    http: { path: "/rateCourse", verb: "post" },
     accepts: [
       {
         arg: "user_id",
@@ -195,6 +211,12 @@ module.exports = function (Review) {
         type: "string",
         required: true,
         description: "课程名称ID",
+      },
+      {
+        arg: "prof_id",
+        type: "string",
+        required: true,
+        description: "教授ID",
       },
       {
         arg: "is_online",

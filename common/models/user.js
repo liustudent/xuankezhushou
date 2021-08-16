@@ -49,6 +49,11 @@ module.exports = function (User) {
         errObj.message = "Empty list but maybe have some";
         errObj.status = 421;
         return cb(errObj);
+      } else {
+        errObj.name = "Invalid error test";
+        errObj.message = "Invalid error test";
+        errObj.status = 499;
+        return cb(errObj);
       }
     }
     let template = [
@@ -109,6 +114,11 @@ module.exports = function (User) {
         errObj.message = "Invalid user";
         errObj.status = 414;
         return cb(errObj);
+      } else {
+        errObj.name = "Invalid error test";
+        errObj.message = "Invalid error test";
+        errObj.status = 499;
+        return cb(errObj);
       }
     }
     let template = "success";
@@ -158,6 +168,11 @@ module.exports = function (User) {
         errObj.name = "Invalid crawl course";
         errObj.message = "Invalid crawl course";
         errObj.status = 414;
+        return cb(errObj);
+      } else {
+        errObj.name = "Invalid error test";
+        errObj.message = "Invalid error test";
+        errObj.status = 499;
         return cb(errObj);
       }
     }
