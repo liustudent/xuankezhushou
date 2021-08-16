@@ -1,13 +1,25 @@
 "use strict";
 
 module.exports = function (Crawlcourse) {
-  Crawlcourse.getCrawledCourseDetails = function (crawl_course_id, cb) {
-    if (crawl_course_id == "1") {
+  Crawlcourse.getCrawledCourseDetails = function (
+    crawl_course_id,
+    user_id,
+    error_test,
+    cb
+  ) {
+    if (error_test) {
       let errObj = new Error();
-      errObj.name = "Course Not Exist";
-      errObj.message = "Course Not Exist";
-      errObj.status = 404;
-      return cb(errObj);
+      if (error_test == 1) {
+        errObj.name = "Invalid user";
+        errObj.message = "Invalid user";
+        errObj.status = 410;
+        return cb(errObj);
+      } else if (error_test == 2) {
+        errObj.name = "Invalid crawl course";
+        errObj.message = "Invalid crawl course";
+        errObj.status = 414;
+        return cb(errObj);
+      }
     }
     let template = {
       crawl_course_id: "603502e021778663b01a974f",
@@ -87,6 +99,17 @@ module.exports = function (Crawlcourse) {
         type: "string",
         required: true,
         description: "爬取课程ID",
+      },
+      {
+        arg: "user_id",
+        type: "string",
+        required: true,
+        description: "用户ID",
+      },
+      {
+        arg: "error_test",
+        type: "number",
+        required: false,
       },
     ],
     returns: { arg: "result", type: "object" },

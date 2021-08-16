@@ -1,13 +1,25 @@
 "use strict";
 
 module.exports = function (Department) {
-  Department.getCourseNames = function (dept_id, cb) {
-    if (dept_id == "1") {
+  Department.getCourseNames = function (dept_id, user_id, error_test, cb) {
+    if (error_test) {
       let errObj = new Error();
-      errObj.name = "Department Not Exist";
-      errObj.message = "Department Not Exist";
-      errObj.status = 404;
-      return cb(errObj);
+      if (error_test == 1) {
+        errObj.name = "Invalid user";
+        errObj.message = "Invalid user";
+        errObj.status = 410;
+        return cb(errObj);
+      } else if (error_test == 2) {
+        errObj.name = "Invalid department";
+        errObj.message = "Invalid department";
+        errObj.status = 412;
+        return cb(errObj);
+      } else if (error_test == 3) {
+        errObj.name = "Empty list but it should not be empty";
+        errObj.message = "Empty list but it should not be empty";
+        errObj.status = 420;
+        return cb(errObj);
+      }
     }
     let template = [
       {
@@ -36,6 +48,17 @@ module.exports = function (Department) {
         type: "string",
         required: true,
         description: "为“获取所有学科”请求返回的dept_id",
+      },
+      {
+        arg: "user_id",
+        type: "string",
+        required: true,
+        description: "用户ID",
+      },
+      {
+        arg: "error_test",
+        type: "number",
+        required: false,
       },
     ],
     returns: { arg: "result", type: "array" },

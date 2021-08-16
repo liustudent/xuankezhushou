@@ -1,20 +1,36 @@
 "use strict";
 
 module.exports = function (Staticcourse) {
-  Staticcourse.getCourseDetails = function (prof_id, static_course_id, cb) {
-    if (prof_id == "1") {
+  Staticcourse.getCourseDetails = function (
+    prof_id,
+    static_course_id,
+    user_id,
+    error_test,
+    cb
+  ) {
+    if (error_test) {
       let errObj = new Error();
-      errObj.name = "Professor Not Exist";
-      errObj.message = "Professor Not Exist";
-      errObj.status = 404;
-      return cb(errObj);
-    }
-    if (static_course_id == "1") {
-      let errObj = new Error();
-      errObj.name = "Course Not Exist";
-      errObj.message = "Course Not Exist";
-      errObj.status = 405;
-      return cb(errObj);
+      if (error_test == 1) {
+        errObj.name = "Invalid user";
+        errObj.message = "Invalid user";
+        errObj.status = 410;
+        return cb(errObj);
+      } else if (error_test == 2) {
+        errObj.name = "Invalid professor";
+        errObj.message = "Invalid professor";
+        errObj.status = 415;
+        return cb(errObj);
+      } else if (error_test == 3) {
+        errObj.name = "Invalid static course";
+        errObj.message = "Invalid static course";
+        errObj.status = 416;
+        return cb(errObj);
+      } else {
+        errObj.name = "Invalid error test";
+        errObj.message = "Invalid error test";
+        errObj.status = 499;
+        return cb(errObj);
+      }
     }
 
     let template = {
@@ -96,6 +112,17 @@ module.exports = function (Staticcourse) {
         type: "array",
         required: true,
         description: "静态课程ID",
+      },
+      {
+        arg: "user_id",
+        type: "string",
+        required: true,
+        description: "用户ID",
+      },
+      {
+        arg: "error_test",
+        type: "number",
+        required: false,
       },
     ],
     returns: { arg: "result", type: "array" },

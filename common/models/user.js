@@ -36,13 +36,20 @@ module.exports = function (User) {
       });
     } else next();
   });
-  User.getWatchList = function (ltx_userid, cb) {
-    if (ltx_userid == "1") {
+  User.getWatchList = function (user_id, error_test, cb) {
+    if (error_test) {
       let errObj = new Error();
-      errObj.name = "User Not Exist";
-      errObj.message = "User Not Exist";
-      errObj.status = 404;
-      return cb(errObj);
+      if (error_test == 1) {
+        errObj.name = "Invalid user";
+        errObj.message = "Invalid user";
+        errObj.status = 410;
+        return cb(errObj);
+      } else if (error_test == 2) {
+        errObj.name = "Empty list but maybe have some";
+        errObj.message = "Empty list but maybe have some";
+        errObj.status = 421;
+        return cb(errObj);
+      }
     }
     let template = [
       {
@@ -75,29 +82,34 @@ module.exports = function (User) {
     http: { path: "/getWatchList", verb: "post" },
     accepts: [
       {
-        arg: "ltx_userid",
+        arg: "user_id",
         type: "string",
         required: true,
-        description: "留同学App内定义的用户ID",
+        description: "用户ID",
+      },
+      {
+        arg: "error_test",
+        type: "number",
+        required: false,
       },
     ],
     returns: { arg: "result", type: "array" },
   });
 
-  User.addToWatchList = function (ltx_userid, crawl_course_id, cb) {
-    if (ltx_userid == "1") {
+  User.addToWatchList = function (user_id, crawl_course_id, error_test, cb) {
+    if (error_test) {
       let errObj = new Error();
-      errObj.name = "User Not Exist";
-      errObj.message = "User Not Exist";
-      errObj.status = 404;
-      return cb(errObj);
-    }
-    if (crawl_course_id == "1") {
-      let errObj = new Error();
-      errObj.name = "Course Not Exist";
-      errObj.message = "Course Not Exist";
-      errObj.status = 405;
-      return cb(errObj);
+      if (error_test == 1) {
+        errObj.name = "Invalid user";
+        errObj.message = "Invalid user";
+        errObj.status = 410;
+        return cb(errObj);
+      } else if (error_test == 2) {
+        errObj.name = "Invalid crawl course";
+        errObj.message = "Invalid user";
+        errObj.status = 414;
+        return cb(errObj);
+      }
     }
     let template = "success";
     return cb(null, template);
@@ -109,10 +121,10 @@ module.exports = function (User) {
     http: { path: "/addToWatchList", verb: "post" },
     accepts: [
       {
-        arg: "ltx_userid",
+        arg: "user_id",
         type: "string",
         required: true,
-        description: "留同学App用户ID",
+        description: "用户ID",
       },
       {
         arg: "crawl_course_id",
@@ -120,24 +132,34 @@ module.exports = function (User) {
         required: true,
         description: "爬取课程编号",
       },
+      {
+        arg: "error_test",
+        type: "number",
+        required: false,
+      },
     ],
     returns: { arg: "result", type: "string" },
   });
 
-  User.removeFromWatchList = function (ltx_userid, crawl_course_id, cb) {
-    if (ltx_userid == "1") {
+  User.removeFromWatchList = function (
+    user_id,
+    crawl_course_id,
+    error_test,
+    cb
+  ) {
+    if (error_test) {
       let errObj = new Error();
-      errObj.name = "User Not Exist";
-      errObj.message = "User Not Exist";
-      errObj.status = 404;
-      return cb(errObj);
-    }
-    if (crawl_course_id == "1") {
-      let errObj = new Error();
-      errObj.name = "Course Not Exist";
-      errObj.message = "Course Not Exist";
-      errObj.status = 405;
-      return cb(errObj);
+      if (error_test == 1) {
+        errObj.name = "Invalid user";
+        errObj.message = "Invalid user";
+        errObj.status = 410;
+        return cb(errObj);
+      } else if (error_test == 2) {
+        errObj.name = "Invalid crawl course";
+        errObj.message = "Invalid crawl course";
+        errObj.status = 414;
+        return cb(errObj);
+      }
     }
 
     let template = "success";
@@ -150,16 +172,21 @@ module.exports = function (User) {
     http: { path: "/removeFromWatchList", verb: "post" },
     accepts: [
       {
-        arg: "ltx_userid",
+        arg: "user_id",
         type: "string",
         required: true,
-        description: "留同学App用户ID",
+        description: "用户ID",
       },
       {
         arg: "crawl_course_id",
         type: "string",
         required: true,
         description: "爬取课程编号",
+      },
+      {
+        arg: "error_test",
+        type: "number",
+        required: false,
       },
     ],
     returns: { arg: "result", type: "string" },

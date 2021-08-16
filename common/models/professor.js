@@ -1,20 +1,41 @@
 "use strict";
 
 module.exports = function (Professor) {
-  Professor.searchCourseByProf = function (ltx_school_id, prof_id, cb) {
-    if (ltx_school_id == "1") {
+  Professor.searchCourseByProf = function (
+    ltx_school_id,
+    prof_id,
+    user_id,
+    error_test,
+    cb
+  ) {
+    if (error_test) {
       let errObj = new Error();
-      errObj.name = "School Not Exist";
-      errObj.message = "School Not Exist";
-      errObj.status = 404;
-      return cb(errObj);
-    }
-    if (prof_id == "1") {
-      let errObj = new Error();
-      errObj.name = "Invalid Professor";
-      errObj.message = "Invalid Professor";
-      errObj.status = 405;
-      return cb(errObj);
+      if (error_test == 1) {
+        errObj.name = "Invalid user";
+        errObj.message = "Invalid user";
+        errObj.status = 410;
+        return cb(errObj);
+      } else if (error_test == 2) {
+        errObj.name = "Invalid school";
+        errObj.message = "Invalid school";
+        errObj.status = 411;
+        return cb(errObj);
+      } else if (error_test == 3) {
+        errObj.name = "Invalid professor";
+        errObj.message = "Invalid professor";
+        errObj.status = 415;
+        return cb(errObj);
+      } else if (error_test == 4) {
+        errObj.name = "Empty list but it should not be empty";
+        errObj.message = "Empty list but it should not be empty";
+        errObj.status = 420;
+        return cb(errObj);
+      } else {
+        errObj.name = "Invalid error test";
+        errObj.message = "Invalid error test";
+        errObj.status = 499;
+        return cb(errObj);
+      }
     }
     let template = [
       {
@@ -44,6 +65,17 @@ module.exports = function (Professor) {
         type: "string",
         required: true,
         description: "6-16 选择的教授的ID",
+      },
+      {
+        arg: "user_id",
+        type: "string",
+        required: true,
+        description: "用户ID",
+      },
+      {
+        arg: "error_test",
+        type: "number",
+        required: false,
       },
     ],
     returns: { arg: "result", type: "array" },

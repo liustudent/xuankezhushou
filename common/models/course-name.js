@@ -1,13 +1,35 @@
 "use strict";
 
 module.exports = function (Coursename) {
-  Coursename.getCourseSections = function (course_name_id, cb) {
-    if (course_name_id == "1") {
+  Coursename.getCourseSections = function (
+    course_name_id,
+    user_id,
+    error_test,
+    cb
+  ) {
+    if (error_test) {
       let errObj = new Error();
-      errObj.name = "CourseName Not Exist";
-      errObj.message = "CourseName Not Exist";
-      errObj.status = 404;
-      return cb(errObj);
+      if (error_test == 1) {
+        errObj.name = "Invalid user";
+        errObj.message = "Invalid user";
+        errObj.status = 410;
+        return cb(errObj);
+      } else if (error_test == 2) {
+        errObj.name = "Invalid course name";
+        errObj.message = "Invalid course name";
+        errObj.status = 411;
+        return cb(errObj);
+      } else if (error_test == 3) {
+        errObj.name = "Empty list";
+        errObj.message = "Empty list";
+        errObj.status = 420;
+        return cb(errObj);
+      } else {
+        errObj.name = "Invalid error test";
+        errObj.message = "Invalid error test";
+        errObj.status = 499;
+        return cb(errObj);
+      }
     }
     let template = [
       {
@@ -45,17 +67,51 @@ module.exports = function (Coursename) {
         required: true,
         description: "6-3获取课程名称列表”请求返回的id",
       },
+      {
+        arg: "user_id",
+        type: "string",
+        required: true,
+        description: "用户ID",
+      },
+      {
+        arg: "error_test",
+        type: "number",
+        required: false,
+      },
     ],
     returns: { arg: "result", type: "array" },
   });
 
-  Coursename.getHistoryGrades = function (course_name_ids, prof_id, cb) {
-    if (course_name_ids == ["1"]) {
+  Coursename.getHistoryGrades = function (
+    course_name_ids,
+    prof_id,
+    user_id,
+    error_test,
+    cb
+  ) {
+    if (error_test) {
       let errObj = new Error();
-      errObj.name = "CourseName Not Exist";
-      errObj.message = "CourseName Not Exist";
-      errObj.status = 404;
-      return cb(errObj);
+      if (error_test == 1) {
+        errObj.name = "Invalid user";
+        errObj.message = "Invalid user";
+        errObj.status = 410;
+        return cb(errObj);
+      } else if (error_test == 2) {
+        errObj.name = "Empty field";
+        errObj.message = "Empty field";
+        errObj.status = 422;
+        return cb(errObj);
+      } else if (error_test == 3) {
+        errObj.name = "Empty list but maybe have some";
+        errObj.message = "Empty list but maybe have some";
+        errObj.status = 421;
+        return cb(errObj);
+      } else {
+        errObj.name = "Invalid error test";
+        errObj.message = "Invalid error test";
+        errObj.status = 499;
+        return cb(errObj);
+      }
     }
     let template = {
       query_grades_all: [
@@ -130,6 +186,17 @@ module.exports = function (Coursename) {
         type: "string",
         required: false,
         description: "教授ID",
+      },
+      {
+        arg: "user_id",
+        type: "string",
+        required: true,
+        description: "用户ID",
+      },
+      {
+        arg: "error_test",
+        type: "number",
+        required: false,
       },
     ],
     returns: { arg: "result", type: "object" },

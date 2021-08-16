@@ -57,13 +57,25 @@ module.exports = function (School) {
     returns: { arg: "result", type: "object" },
   });
 
-  School.getAllDepts = function (ltx_school_id, cb) {
-    if (ltx_school_id == "1") {
+  School.getAllDepts = function (ltx_school_id, user_id, error_test, cb) {
+    if (error_test) {
       let errObj = new Error();
-      errObj.name = "School Not Exist";
-      errObj.message = "School Not Exist";
-      errObj.status = 404;
-      return cb(errObj);
+      if (error_test == 1) {
+        errObj.name = "Invalid user";
+        errObj.message = "Invalid user";
+        errObj.status = 410;
+        return cb(errObj);
+      } else if (error_test == 2) {
+        errObj.name = "Invalid school";
+        errObj.message = "Invalid school";
+        errObj.status = 411;
+        return cb(errObj);
+      } else if (error_test == 3) {
+        errObj.name = "Empty list but it should not be empty";
+        errObj.message = "Empty list but it should not be empty";
+        errObj.status = 420;
+        return cb(errObj);
+      }
     }
     let template = [
       {
@@ -91,17 +103,40 @@ module.exports = function (School) {
         required: true,
         description: "留同学App内定义的学校ID",
       },
+      {
+        arg: "user_id",
+        type: "string",
+        required: true,
+        description: "用户ID",
+      },
+      {
+        arg: "error_test",
+        type: "number",
+        required: false,
+      },
     ],
     returns: { arg: "result", type: "array" },
   });
 
-  School.getCourseNames = function (ltx_school_id, cb) {
-    if (ltx_school_id == "1") {
+  School.getCourseNames = function (ltx_school_id, user_id, error_test, cb) {
+    if (error_test) {
       let errObj = new Error();
-      errObj.name = "School Not Exist";
-      errObj.message = "School Not Exist";
-      errObj.status = 404;
-      return cb(errObj);
+      if (error_test == 1) {
+        errObj.name = "Invalid user";
+        errObj.message = "Invalid user";
+        errObj.status = 410;
+        return cb(errObj);
+      } else if (error_test == 2) {
+        errObj.name = "Invalid school";
+        errObj.message = "Invalid school";
+        errObj.status = 411;
+        return cb(errObj);
+      } else if (error_test == 3) {
+        errObj.name = "Empty list but it should not be empty";
+        errObj.message = "Empty list but it should not be empty";
+        errObj.status = 420;
+        return cb(errObj);
+      }
     }
     let template = [
       {
@@ -149,24 +184,51 @@ module.exports = function (School) {
         required: true,
         description: "留同学App中定义的学校ID",
       },
+      {
+        arg: "user_id",
+        type: "string",
+        required: true,
+        description: "用户ID",
+      },
+      {
+        arg: "error_test",
+        type: "number",
+        required: false,
+      },
     ],
     returns: { arg: "result", type: "array" },
   });
 
-  School.searchProfs = function (ltx_school_id, keyword, cb) {
-    if (ltx_school_id == "1") {
+  School.searchProfs = function (
+    ltx_school_id,
+    keyword,
+    user_id,
+    error_test,
+    cb
+  ) {
+    if (error_test) {
       let errObj = new Error();
-      errObj.name = "School Not Exist";
-      errObj.message = "School Not Exist";
-      errObj.status = 404;
-      return cb(errObj);
-    }
-    if (keyword == "1") {
-      let errObj = new Error();
-      errObj.name = "No available profs";
-      errObj.message = "No available profs";
-      errObj.status = 405;
-      return cb(errObj);
+      if (error_test == 1) {
+        errObj.name = "Invalid user";
+        errObj.message = "Invalid user";
+        errObj.status = 410;
+        return cb(errObj);
+      } else if (error_test == 2) {
+        errObj.name = "Invalid school";
+        errObj.message = "Invalid school";
+        errObj.status = 411;
+        return cb(errObj);
+      } else if (error_test == 3) {
+        errObj.name = "Empty list but maybe have some ";
+        errObj.message = "Empty list but maybe have some ";
+        errObj.status = 421;
+        return cb(errObj);
+      } else {
+        errObj.name = "Invalid error test";
+        errObj.message = "Invalid error test";
+        errObj.status = 499;
+        return cb(errObj);
+      }
     }
     let template = [
       {
@@ -199,6 +261,17 @@ module.exports = function (School) {
         type: "string",
         required: true,
         description: "关键词用于检索教授",
+      },
+      {
+        arg: "user_id",
+        type: "string",
+        required: true,
+        description: "用户ID",
+      },
+      {
+        arg: "error_test",
+        type: "number",
+        required: false,
       },
     ],
     returns: { arg: "result", type: "array" },

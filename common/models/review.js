@@ -1,59 +1,72 @@
 "use strict";
 
 module.exports = function (Review) {
-  Review.thumbsDown = function (review_id, user_id, cb) {
-    if (review_id == "1") {
+  Review.thumbsDown = function (review_id, user_id, error_test, cb) {
+    if (error_test) {
       let errObj = new Error();
-      errObj.name = "School Not Exist";
-      errObj.message = "School Not Exist";
-      errObj.status = 404;
-      return cb(errObj);
+      if (error_test == 1) {
+        errObj.name = "Invalid user";
+        errObj.message = "Invalid user";
+        errObj.status = 410;
+        return cb(errObj);
+      } else if (error_test == 2) {
+        errObj.name = "Invalid review";
+        errObj.message = "Invalid review";
+        errObj.status = 417;
+        return cb(errObj);
+      } else {
+        errObj.name = "Invalid error test";
+        errObj.message = "Invalid error test";
+        errObj.status = 499;
+        return cb(errObj);
+      }
     }
-    if (user_id == "1") {
-      let errObj = new Error();
-      errObj.name = "Invalid User";
-      errObj.message = "Invalid User";
-      errObj.status = 405;
-      return cb(errObj);
-    }
-    let template = "success";
-    return cb(null, template);
+
+    Review.remoteMethod("thumbsDown", {
+      description: "评论点踩",
+      http: { path: "/thumbsDown", verb: "post" },
+      accepts: [
+        {
+          arg: "review_id",
+          type: "string",
+          required: true,
+          description: "评论ID",
+        },
+        {
+          arg: "user_id",
+          type: "string",
+          required: true,
+          description: "用户ID",
+        },
+        {
+          arg: "error_test",
+          type: "number",
+          required: false,
+        },
+      ],
+      returns: { arg: "result", type: "string" },
+    });
   };
 
-  Review.remoteMethod("thumbsDown", {
-    description: "评论点踩",
-    http: { path: "/thumbsDown", verb: "post" },
-    accepts: [
-      {
-        arg: "review_id",
-        type: "string",
-        required: true,
-        description: "评论ID",
-      },
-      {
-        arg: "user_id",
-        type: "string",
-        required: true,
-        description: "用户ID",
-      },
-    ],
-    returns: { arg: "result", type: "string" },
-  });
-
-  Review.report = function (review_id, user_id, cb) {
-    if (review_id == "1") {
+  Review.report = function (review_id, user_id, error_test, cb) {
+    if (error_test) {
       let errObj = new Error();
-      errObj.name = "School Not Exist";
-      errObj.message = "School Not Exist";
-      errObj.status = 404;
-      return cb(errObj);
-    }
-    if (user_id == "1") {
-      let errObj = new Error();
-      errObj.name = "Invalid User";
-      errObj.message = "Invalid User";
-      errObj.status = 405;
-      return cb(errObj);
+      if (error_test == 1) {
+        errObj.name = "Invalid user";
+        errObj.message = "Invalid user";
+        errObj.status = 410;
+        return cb(errObj);
+      } else if (error_test == 2) {
+        errObj.name = "Invalid review";
+        errObj.message = "Invalid review";
+        errObj.status = 417;
+        return cb(errObj);
+      } else {
+        errObj.name = "Invalid error test";
+        errObj.message = "Invalid error test";
+        errObj.status = 499;
+        return cb(errObj);
+      }
     }
     let template = "success";
     return cb(null, template);
@@ -75,24 +88,34 @@ module.exports = function (Review) {
         required: true,
         description: "用户ID",
       },
+      {
+        arg: "error_test",
+        type: "number",
+        required: false,
+      },
     ],
     returns: { arg: "result", type: "string" },
   });
 
-  Review.thumbsUp = function (review_id, user_id, cb) {
-    if (review_id == "1") {
+  Review.thumbsUp = function (review_id, user_id, error_test, cb) {
+    if (error_test) {
       let errObj = new Error();
-      errObj.name = "School Not Exist";
-      errObj.message = "School Not Exist";
-      errObj.status = 404;
-      return cb(errObj);
-    }
-    if (user_id == "1") {
-      let errObj = new Error();
-      errObj.name = "Invalid User";
-      errObj.message = "Invalid User";
-      errObj.status = 405;
-      return cb(errObj);
+      if (error_test == 1) {
+        errObj.name = "Invalid user";
+        errObj.message = "Invalid user";
+        errObj.status = 410;
+        return cb(errObj);
+      } else if (error_test == 2) {
+        errObj.name = "Invalid review";
+        errObj.message = "Invalid review";
+        errObj.status = 417;
+        return cb(errObj);
+      } else {
+        errObj.name = "Invalid error test";
+        errObj.message = "Invalid error test";
+        errObj.status = 499;
+        return cb(errObj);
+      }
     }
     let template = "success";
     return cb(null, template);
@@ -114,6 +137,11 @@ module.exports = function (Review) {
         required: true,
         description: "用户ID",
       },
+      {
+        arg: "error_test",
+        type: "number",
+        required: false,
+      },
     ],
     returns: { arg: "result", type: "string" },
   });
@@ -131,14 +159,22 @@ module.exports = function (Review) {
     is_attendance,
     grade_received,
     chosen_labels,
+    error_test,
     cb
   ) {
-    if (user_id == "1") {
+    if (error_test) {
       let errObj = new Error();
-      errObj.name = "Invalid User";
-      errObj.message = "Invalid User";
-      errObj.status = 404;
-      return cb(errObj);
+      if (error_test == 1) {
+        errObj.name = "Invalid user";
+        errObj.message = "Invalid user";
+        errObj.status = 410;
+        return cb(errObj);
+      } else {
+        errObj.name = "Invalid error test";
+        errObj.message = "Invalid error test";
+        errObj.status = 499;
+        return cb(errObj);
+      }
     }
     let template = "success";
     return cb(null, template);
@@ -146,7 +182,7 @@ module.exports = function (Review) {
 
   Review.remoteMethod("rateCourse", {
     description: "评论点赞",
-    http: { path: "/rateCourse", verb: "post" },
+    http: { path: "/rateCourse", verb: "get" },
     accepts: [
       {
         arg: "user_id",
@@ -213,6 +249,11 @@ module.exports = function (Review) {
         type: "array",
         required: false,
         description: "已选择的标签",
+      },
+      {
+        arg: "error_test",
+        type: "number",
+        required: false,
       },
     ],
     returns: { arg: "result", type: "string" },
