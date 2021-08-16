@@ -125,55 +125,36 @@ module.exports = function (Coursename) {
       query_grades_all: [
         {
           query_name: "IN4MX 43",
-          query_gpa_avg: "2.7",
-          query_grades: {
-            grade_a_count: 240,
-            grade_b_count: 254,
-            grade_c_count: 123,
-            grade_d_count: 81,
-            grade_f_count: 73,
-            grade_p_count: 239,
-            grade_np_count: 35,
-          },
+          query_gpa_avg: "3.7",
+          query_difficulty: "3.5",
+          
         },
         {
           query_name: "I&C SCI 32",
-          query_gpa_avg: "2.4",
-          query_grades: {
-            grade_a_count: 240,
-            grade_b_count: 254,
-            grade_c_count: 123,
-            grade_d_count: 81,
-            grade_f_count: 73,
-            grade_p_count: 239,
-            grade_np_count: 35,
-          },
-        },
+          query_gpa_avg: "2.1",
+          query_difficulty: "4.6",
+        }
       ],
       course_grades: [
         {
           static_course_id: "603502e021778663b01a974f",
-          year_term: "2018-2019 Spring",
+          year_term: "Spring 2021",
           static_course_name: "IN4MX 43",
-          static_course_code: "20185",
-          static_course_description: "INTRO SOFTWARE ENGR",
           prof_id: "603502e021778663b01a974f",
-          prof_name: "Ziv, H.",
-          course_avg_gpa: 3.32,
-          recommend_rate: 4.3,
+          prof_name: "Sahranavard N.",
+          course_avg_gpa: 3.2,
+          recommend_rate: 4.3
         },
         {
           static_course_id: "603502e021778663b01a974f",
-          year_term: "2018-2019 Spring",
+          year_term: "Winter 2020",
           static_course_name: "IN4MX 43",
-          static_course_code: "20185",
-          static_course_description: "INTRO SOFTWARE ENGR",
           prof_id: "603502e021778663b01a974f",
           prof_name: "Ziv, H.",
-          course_avg_gpa: 3.32,
-          recommend_rate: 4.3,
-        },
-      ],
+          course_avg_gpa: 2.5,
+          recommend_rate: 4.3
+        }
+      ]
     };
     return cb(null, template);
   };
