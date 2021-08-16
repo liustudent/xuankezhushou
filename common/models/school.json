@@ -64,6 +64,20 @@
       "principalId": "normal",
       "permission": "ALLOW",
       "property": "getAllDepts"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "normal",
+      "permission": "ALLOW",
+      "property": "getCourseNames"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "normal",
+      "permission": "ALLOW",
+      "property": "searchProfs"
     }
   ],
   "methods": {}

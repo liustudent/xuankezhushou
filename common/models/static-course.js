@@ -1,6 +1,106 @@
 "use strict";
 
 module.exports = function (Staticcourse) {
+  Staticcourse.getCourseDetails = function (prof_id, static_course_id, cb) {
+    if (prof_id == "1") {
+      let errObj = new Error();
+      errObj.name = "Professor Not Exist";
+      errObj.message = "Professor Not Exist";
+      errObj.status = 404;
+      return cb(errObj);
+    }
+    if (static_course_id == "1") {
+      let errObj = new Error();
+      errObj.name = "Course Not Exist";
+      errObj.message = "Course Not Exist";
+      errObj.status = 405;
+      return cb(errObj);
+    }
+
+    let template = {
+      static_course_id: "603502e021778663b01a974f",
+      coursename_id: "603502e021778663b01a974f",
+      description: "ADV PROD C  ",
+      professor_name: "Klefstad, R.",
+      course_name: "COMPSCI 103",
+      class_day: "TuTh",
+      start_time: "14:00",
+      end_time: "15:20",
+      place: "VTLREMOTE",
+      course_num: "34000",
+      capacity: 100,
+      course_grades: {
+        gpa_avg: "2.89",
+        grade_a_count: 90,
+        grade_b_count: 5,
+        grade_c_count: 3,
+        grade_d_count: 1,
+        grade_f_count: 0,
+        grade_p_count: 4,
+        grade_np_count: 2,
+      },
+      all_grades: {
+        gpa_avg: "3.21",
+        grade_a_count: 91,
+        grade_b_count: 10,
+        grade_c_count: 15,
+        grade_d_count: 378,
+        grade_f_count: 753,
+        grade_p_count: 13,
+        grade_np_count: 521,
+      },
+      reviews: [
+        {
+          created: "2020-10-11T00:00:00.000Z",
+          attendance: "Not Mandatary",
+          is_online: "No",
+          grade_received: "A ",
+          selected_labels: ["Respect", "Easy grade"],
+          recomend_rate: 3,
+          difficulty_rate: 3,
+          content:
+            "Klefstad的逻辑太让人头大了，所有人都在抱怨这节课，总的来说这节课不算太难，不需要上lec和discurssion。",
+          thumbs_up: 12,
+          thumbs_down: 0,
+        },
+        {
+          created: "2019-05-02T04:00:00.000Z",
+          attendance: "Not Mandatary",
+          is_online: "No",
+          grade_received: "A ",
+          selected_labels: ["Respect", "Easy grade"],
+          recomend_rate: 3,
+          difficulty_rate: 3,
+          content:
+            "Klefstad的逻辑太让人头大了，所有人都在抱怨这节课，总的来说这节课不算太难，不需要上lec和discurssion。",
+          thumbs_up: 12,
+          thumbs_down: 0,
+        },
+      ],
+    };
+    return cb(null, template);
+  };
+
+  Staticcourse.remoteMethod("getCourseDetails", {
+    description: "6-14-1 获取静态课程详情",
+    http: { path: "/getCourseDetails", verb: "post" },
+    accepts: [
+      {
+        arg: "prof_id",
+        type: "array",
+        required: true,
+        description: "教授ID",
+      },
+      {
+        arg: "static_course_id",
+        type: "array",
+        required: true,
+        description: "静态课程ID",
+      },
+    ],
+    returns: { arg: "result", type: "array" },
+  });
+
   Staticcourse.disableRemoteMethodByName("upsert"); // disables PATCH /static_courses
   Staticcourse.disableRemoteMethodByName("find"); // disables GET /static_courses
   Staticcourse.disableRemoteMethodByName("replaceOrCreate"); // disables PUT /static_courses

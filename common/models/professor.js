@@ -1,6 +1,54 @@
 "use strict";
 
 module.exports = function (Professor) {
+  Professor.searchCourseByProf = function (ltx_school_id, prof_id, cb) {
+    if (ltx_school_id == "1") {
+      let errObj = new Error();
+      errObj.name = "School Not Exist";
+      errObj.message = "School Not Exist";
+      errObj.status = 404;
+      return cb(errObj);
+    }
+    if (prof_id == "1") {
+      let errObj = new Error();
+      errObj.name = "Invalid Professor";
+      errObj.message = "Invalid Professor";
+      errObj.status = 405;
+      return cb(errObj);
+    }
+    let template = [
+      {
+        prof_id: "603502e021778663b01a974f",
+        prof_name: "Peter, A.",
+      },
+      {
+        prof_id: "603502e021778663b01a974f",
+        prof_name: "Pattis, R.",
+      },
+    ];
+    return cb(null, template);
+  };
+
+  Professor.remoteMethod("searchCourseByProf", {
+    description: "6-17 选择课程",
+    http: { path: "/searchCourseByProf", verb: "post" },
+    accepts: [
+      {
+        arg: "ltx_school_id",
+        type: "string",
+        required: true,
+        description: "留同学App定义的学校ID",
+      },
+      {
+        arg: "prof_id",
+        type: "string",
+        required: true,
+        description: "6-16 选择的教授的ID",
+      },
+    ],
+    returns: { arg: "result", type: "array" },
+  });
+
   Professor.disableRemoteMethodByName("upsert"); // disables PATCH /professors
   Professor.disableRemoteMethodByName("find"); // disables GET /professors
   Professor.disableRemoteMethodByName("replaceOrCreate"); // disables PUT /professors

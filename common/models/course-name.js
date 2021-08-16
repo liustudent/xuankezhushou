@@ -2,43 +2,137 @@
 
 module.exports = function (Coursename) {
   Coursename.getCourseSections = function (course_name_id, cb) {
-    if (course_name_id=="1"){
+    if (course_name_id == "1") {
       let errObj = new Error();
-          errObj.name = "CourseName Not Exist";
-          errObj.message = "CourseName Not Exist"
-          errObj.status = 404;
-          return cb(errObj);
+      errObj.name = "CourseName Not Exist";
+      errObj.message = "CourseName Not Exist";
+      errObj.status = 404;
+      return cb(errObj);
     }
     let template = [
       {
-        _id: "1",
-        course_code:"12345",
-        section:"A",
-        course_type:"Lec",
-        class_day:["M","W","F"],
-        start_time:"10:00",
-        end_time:"11:00",
-        enrolled_percent:"50"
+        crawl_course_id: "1",
+        course_section: "A",
+        course_code: "34000",
+        class_day: ["Tu", "Th"],
+        start_time: "14:00",
+        end_time: "15:20",
+        enrolled_percent: "77.00",
+        course_type: "LEC",
       },
       {
-        _id: "2",
-        course_code:"54321",
-        section:"Z",
-        course_type:"Dis",
-        class_day:["M","W"],
-        start_time:"9:00",
-        end_time:"10:00",
-        enrolled_percent:"70"
+        crawl_course_id: "1",
+        course_section: "A",
+        course_code: "34000",
+        class_day: ["Tu", "Th"],
+        start_time: "14:00",
+        end_time: "15:20",
+        enrolled_percent: "77.00",
+        course_type: "LEC",
       },
     ];
     return cb(null, template);
   };
 
   Coursename.remoteMethod("getCourseSections", {
-    description: "Get all sections for a course",
+    description:
+      "6-4 获取课程所有分节, 该API用于6-4页面获取课程所有分节列表，请求需要包含“6-3获取课程名称列表”请求返回的course_name_id，返回值包含一个状态code和data。\ndata的格式为array of object, 其中包含多个学科名称，按照字符串中数字从小到大排序（请求返回值已完成排序）",
     http: { path: "/getCourseSections", verb: "post" },
-    accepts: [{ arg: "course_name_id", type: "string", required: true }],
+    accepts: [
+      {
+        arg: "course_name_id",
+        type: "string",
+        required: true,
+        description: "6-3获取课程名称列表”请求返回的id",
+      },
+    ],
     returns: { arg: "result", type: "array" },
+  });
+
+  Coursename.getHistoryGrades = function (course_name_ids, prof_id, cb) {
+    if (course_name_ids == ["1"]) {
+      let errObj = new Error();
+      errObj.name = "CourseName Not Exist";
+      errObj.message = "CourseName Not Exist";
+      errObj.status = 404;
+      return cb(errObj);
+    }
+    let template = {
+      query_grades_all: [
+        {
+          query_name: "IN4MX 43",
+          query_gpa_avg: "2.7",
+          query_grades: {
+            grade_a_count: 240,
+            grade_b_count: 254,
+            grade_c_count: 123,
+            grade_d_count: 81,
+            grade_f_count: 73,
+            grade_p_count: 239,
+            grade_np_count: 35,
+          },
+        },
+        {
+          query_name: "I&C SCI 32",
+          query_gpa_avg: "2.4",
+          query_grades: {
+            grade_a_count: 240,
+            grade_b_count: 254,
+            grade_c_count: 123,
+            grade_d_count: 81,
+            grade_f_count: 73,
+            grade_p_count: 239,
+            grade_np_count: 35,
+          },
+        },
+      ],
+      course_grades: [
+        {
+          static_course_id: "603502e021778663b01a974f",
+          year_term: "2018-2019 Spring",
+          static_course_name: "IN4MX 43",
+          static_course_code: "20185",
+          static_course_description: "INTRO SOFTWARE ENGR",
+          prof_id: "603502e021778663b01a974f",
+          prof_name: "Ziv, H.",
+          course_avg_gpa: 3.32,
+          recommend_rate: 4.3,
+        },
+        {
+          static_course_id: "603502e021778663b01a974f",
+          year_term: "2018-2019 Spring",
+          static_course_name: "IN4MX 43",
+          static_course_code: "20185",
+          static_course_description: "INTRO SOFTWARE ENGR",
+          prof_id: "603502e021778663b01a974f",
+          prof_name: "Ziv, H.",
+          course_avg_gpa: 3.32,
+          recommend_rate: 4.3,
+        },
+      ],
+    };
+    return cb(null, template);
+  };
+
+  Coursename.remoteMethod("getHistoryGrades", {
+    description:
+      "6-13 查询成绩分布 , 该API用于6-13页面“立即查询“按钮，返回参数显示在6-14页面。\n\n学科和课号“回显”dept_name + static_course_name。",
+    http: { path: "/getHistoryGrades", verb: "post" },
+    accepts: [
+      {
+        arg: "course_name_ids",
+        type: "string",
+        required: false,
+        description: "array of 课程ID",
+      },
+      {
+        arg: "prof_id",
+        type: "string",
+        required: false,
+        description: "教授ID",
+      },
+    ],
+    returns: { arg: "result", type: "object" },
   });
   Coursename.disableRemoteMethodByName("upsert"); // disables PATCH /course_names
   Coursename.disableRemoteMethodByName("find"); // disables GET /course_names

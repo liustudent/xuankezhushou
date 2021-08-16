@@ -10,16 +10,20 @@ module.exports = function (Crawlcourse) {
       return cb(errObj);
     }
     let template = {
-      professor_name: "Junling Fu",
-      course_name: "Introduction of Bolun",
-      course_num: "12345",
-      description: "Want to be a billionaire? Learn Bolun's success by Fu",
-      class_day: ["M", "Tu", "W", "Th", "F", "Sa", "Su"],
-      start_time: "01:00",
-      end_time: "23:00",
-      place: "Sky House",
-      grade: {
-        gpa_avg: "3.89",
+      crawl_course_id: "603502e021778663b01a974f",
+      coursename_id: "603502e021778663b01a974f",
+      description: "ADV PROD C  ",
+      prof_id: "603502e021778663b01a974f",
+      professor_name: "Klefstad, R.",
+      course_name: "COMPSCI 103",
+      class_day: "TuTh",
+      start_time: "14:00",
+      end_time: "15:20",
+      place: "VTLREMOTE",
+      course_num: "34000",
+      capacity: 100,
+      course_grades: {
+        gpa_avg: 2.89,
         grade_a_count: 90,
         grade_b_count: 5,
         grade_c_count: 3,
@@ -29,7 +33,7 @@ module.exports = function (Crawlcourse) {
         grade_np_count: 2,
       },
       all_grades: {
-        gpa_avg: "1.22",
+        gpa_avg: 3.21,
         grade_a_count: 91,
         grade_b_count: 10,
         grade_c_count: 15,
@@ -40,44 +44,51 @@ module.exports = function (Crawlcourse) {
       },
       reviews: [
         {
-          created: new Date("2020-10-11"),
-          is_online: false,
-          need_textbook:true,
-          course_difficulty: 4,
-          course_recommend: 5,
-          prof_rate: 5,
-          prof_recommend: 5,
-          content: "This is the best class I have with Fu, he made this super hard class in a easier way which make me become a billionaire in just one month!",
-          mandatary: true,
-          grade_received: "A+",
-          selected_labels: ["Respect","Easy grade"],
-          thumbs_up: 736,
-          thumbs_down: 23,
+          review_id: "603502e021778663b01a974f",
+          created: "2020-10-11T00:00:00.000Z",
+          attendance: "Not Mandatary",
+          is_online: "Yes",
+          grade_received: "A- ",
+          selected_labels: ["作业太多", "Respect", "CLEAR GRADING CRITERIA"],
+          recomend_rate: 3.0,
+          difficulty_rate: 3.0,
+          content:
+            "Klefstad的逻辑太让人头大了，所有人都在抱怨这节课，总的来说这节课不算太难，不需要上lec和discurssion。",
+          thumbs_up: 12,
+          thumbs_down: 4,
         },
         {
-          created: new Date("2019-5-2"),
-          is_online: false,
-          need_textbook:true,
-          course_difficulty: 5,
-          course_recommend: 2,
-          prof_rate: 2,
-          prof_recommend: 2,
-          content: "Worst course I ever have, not recommend",
-          mandatary: true,
-          grade_received: "F",
-          selected_labels: ["Lots of homework"],
-          thumbs_up: 1,
-          thumbs_down: 7893,
+          review_id: "603502e021778663b01a974f",
+          created: "2020-10-11T00:00:00.000Z",
+          attendance: "Not Mandatary",
+          is_online: "Yes",
+          grade_received: "A- ",
+          selected_labels: ["作业太多", "Respect", "CLEAR GRADING CRITERIA"],
+          recomend_rate: 3.0,
+          difficulty_rate: 3.0,
+          content:
+            "Klefstad的逻辑太让人头大了，所有人都在抱怨这节课，总的来说这节课不算太难，不需要上lec和discurssion。",
+          thumbs_up: 12,
+          thumbs_down: 4,
         },
+        {},
       ],
     };
     return cb(null, template);
   };
 
   Crawlcourse.remoteMethod("getCrawledCourseDetails", {
-    description: "get detailed info for a crawled course",
+    description:
+      "6-6 获取爬取课程详情, 该API用于6-6页面来获取爬取课程详情，请求需要包含“6-4获取课程所有分节”请求返回的crawl_course_id，返回值包含一个状态code和data。",
     http: { path: "/getCrawledCourseDetails", verb: "post" },
-    accepts: [{ arg: "crawl_course_id", type: "string", required: true }],
+    accepts: [
+      {
+        arg: "crawl_course_id",
+        type: "string",
+        required: true,
+        description: "爬取课程ID",
+      },
+    ],
     returns: { arg: "result", type: "object" },
   });
   Crawlcourse.disableRemoteMethodByName("upsert"); // disables PATCH /crawl_courses

@@ -2,37 +2,45 @@
 
 module.exports = function (Department) {
   Department.getCourseNames = function (dept_id, cb) {
-    if (dept_id=="1"){
+    if (dept_id == "1") {
       let errObj = new Error();
-          errObj.name = "Department Not Exist";
-          errObj.message = "Department Not Exist"
-          errObj.status = 404;
-          return cb(errObj);
+      errObj.name = "Department Not Exist";
+      errObj.message = "Department Not Exist";
+      errObj.status = 404;
+      return cb(errObj);
     }
     let template = [
       {
-        _id: "1",
-        course_name: "ICS 31",
-        description: "Introduction to Python",
-        enrolled_percent: "50"
+        course_name_id: "1",
+        course_name: "COMPSCI 105",
+        description: "ADV PROD C  ",
+        enrolled_percent: "77.00",
       },
       {
-        _id: "2",
-        course_name: "ICS 33",
-        description: "Advanced Python",
-        enrolled_percent: "90"
+        course_name_id: "2",
+        course_name: "COMPSCI 105",
+        description: "ADV PROD C  ",
+        enrolled_percent: "77.00",
       },
     ];
     return cb(null, template);
   };
 
   Department.remoteMethod("getCourseNames", {
-    description: "Get all course names for a department",
+    description:
+      "6-3 获取课程名称列表， 该API用于6-3页面获取课程名称列表，请求需要包含“获取所有学科”请求返回的dept_id，返回值包含一个状态code和data。\ndata的格式为array of object, 其中包含多个学科名称，按照首字母从A-Z排序（请求返回值已完成排序）",
     http: { path: "/getCourseNames", verb: "post" },
-    accepts: [{ arg: "dept_id", type: "string", required: true }],
+    accepts: [
+      {
+        arg: "dept_id",
+        type: "string",
+        required: true,
+        description: "为“获取所有学科”请求返回的dept_id",
+      },
+    ],
     returns: { arg: "result", type: "array" },
   });
-  
+
   Department.disableRemoteMethodByName("upsert"); // disables PATCH /departments
   Department.disableRemoteMethodByName("find"); // disables GET /departments
   Department.disableRemoteMethodByName("replaceOrCreate"); // disables PUT /departments

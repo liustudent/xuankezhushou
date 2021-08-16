@@ -60,6 +60,13 @@
       "principalId": "normal",
       "permission": "ALLOW",
       "property": "getCourseSections"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "normal",
+      "permission": "ALLOW",
+      "property": "getHistoryGrades"
     }
   ],
   "methods": {}

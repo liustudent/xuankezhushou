@@ -46,31 +46,41 @@ module.exports = function (User) {
     }
     let template = [
       {
-        _id: "1",
-        course_name: "CS121",
-        course_code: "12345",
-        class_day: ["W", "M", "F"],
-        start_time: "10:00",
-        end_time: "11:00",
-        status: "OPEN",
+        course_id: "1",
+        course_name: "ECON 100A",
+        course_section: "A",
+        course_code: "20012",
+        class_day: ["Tu", "Th"],
+        start_time: "9:30",
+        end_time: "10:50",
+        status: "FULL",
       },
       {
-        _id: "2",
-        course_name: "CS122",
-        course_code: "54321",
+        course_id: "2",
+        course_name: "ECON 100A",
+        course_section: "1",
+        course_code: "20013",
         class_day: ["Tu", "Th"],
-        start_time: "9:00",
-        end_time: "10:00",
-        status: "FULL",
+        start_time: "9:30",
+        end_time: "10:50",
+        status: "OPEN",
       },
     ];
     return cb(null, template);
   };
 
   User.remoteMethod("getWatchList", {
-    description: "Get watch list for a user",
+    description:
+      "6-1 获取提醒列表, 该API用于6-1页面获取空位提醒列表，返回值包含一个状态code和data。\ndata的格式为array of object, 其中包含多节追踪课程，不需排序。",
     http: { path: "/getWatchList", verb: "post" },
-    accepts: [{ arg: "ltx_userid", type: "string", required: true }],
+    accepts: [
+      {
+        arg: "ltx_userid",
+        type: "string",
+        required: true,
+        description: "留同学App内定义的用户ID",
+      },
+    ],
     returns: { arg: "result", type: "array" },
   });
 
@@ -94,11 +104,22 @@ module.exports = function (User) {
   };
 
   User.remoteMethod("addToWatchList", {
-    description: "add a course to watch list for a user",
+    description:
+      "6-4/6-6添加课程到提醒列表, 该API用于6-4/6-6页面，用于添加课程到提醒列表，请求需要包含“6-4获取课程所有分节”请求返回的crawl_course_id和留同学App给用户定义的ltx_userid，返回值包含一个状态code和result。",
     http: { path: "/addToWatchList", verb: "post" },
     accepts: [
-      { arg: "ltx_userid", type: "string", required: true },
-      { arg: "crawl_course_id", type: "string", required: true },
+      {
+        arg: "ltx_userid",
+        type: "string",
+        required: true,
+        description: "留同学App用户ID",
+      },
+      {
+        arg: "crawl_course_id",
+        type: "string",
+        required: true,
+        description: "爬取课程编号",
+      },
     ],
     returns: { arg: "result", type: "string" },
   });
@@ -124,11 +145,22 @@ module.exports = function (User) {
   };
 
   User.remoteMethod("removeFromWatchList", {
-    description: "remove a course from watch list for a user",
+    description:
+      "6-4/6-7 从提醒列表移出课程, 该API用于6-4/6-7页面，用于移出课程从提醒列表，请求需要包含“6-4/6-6获取课程所有分节”请求返回的crawl_course_id和留同学App给用户定义的ltx_userid，返回值包含一个状态code和result。",
     http: { path: "/removeFromWatchList", verb: "post" },
     accepts: [
-      { arg: "ltx_userid", type: "string", required: true },
-      { arg: "crawl_course_id", type: "string", required: true },
+      {
+        arg: "ltx_userid",
+        type: "string",
+        required: true,
+        description: "留同学App用户ID",
+      },
+      {
+        arg: "crawl_course_id",
+        type: "string",
+        required: true,
+        description: "爬取课程编号",
+      },
     ],
     returns: { arg: "result", type: "string" },
   });

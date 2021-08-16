@@ -58,32 +58,244 @@ module.exports = function (School) {
   });
 
   School.getAllDepts = function (ltx_school_id, cb) {
-    if (ltx_school_id=="1"){
+    if (ltx_school_id == "1") {
       let errObj = new Error();
-          errObj.name = "School Not Exist";
-          errObj.message = "School Not Exist"
-          errObj.status = 404;
-          return cb(errObj);
+      errObj.name = "School Not Exist";
+      errObj.message = "School Not Exist";
+      errObj.status = 404;
+      return cb(errObj);
     }
     let template = [
       {
-        _id: "1",
+        dept_id: "1",
         dept_name: "Computer Science",
-        dept_name_abbrev: "CS",
+        dept_name_abbrev: "COMPSCI",
       },
       {
-        _id: "2",
-        dept_name: "Mathematics",
-        dept_name_abbrev: "Math",
+        dept_id: "2",
+        dept_name: "Academic English",
+        dept_name_abbrev: "AC ENG",
       },
     ];
     return cb(null, template);
   };
 
   School.remoteMethod("getAllDepts", {
-    description: "Get all departments for a school",
+    description:
+      "6-2 获取所有学科, 该API用于6-2页面获取所有学科列表，请求需要包含留同学App内定义的学校ID，返回值包含一个状态code和data。、ndata的格式为array of object, 其中包含多个学科，按照首字母从A-Z排序（请求返回值已完成排序）",
     http: { path: "/getAllDepts", verb: "post" },
-    accepts: [{ arg: "ltx_school_id", type: "string", required: true }],
+    accepts: [
+      {
+        arg: "ltx_school_id",
+        type: "string",
+        required: true,
+        description: "留同学App内定义的学校ID",
+      },
+    ],
+    returns: { arg: "result", type: "array" },
+  });
+
+  School.getCourseNames = function (ltx_school_id, cb) {
+    if (ltx_school_id == "1") {
+      let errObj = new Error();
+      errObj.name = "School Not Exist";
+      errObj.message = "School Not Exist";
+      errObj.status = 404;
+      return cb(errObj);
+    }
+    let template = [
+      {
+        dept_id: "603502e021778663b01a974f",
+        dept_name_abbrev: "AC ENG",
+        dept_name: "Academic English",
+        dept_courses: [
+          {
+            static_course_id: "603502e021778663b01a974f",
+            static_course_name: "20B",
+          },
+          {
+            static_course_id: "603502e021778663b01a974f",
+            static_course_name: "22A",
+          },
+        ],
+      },
+      {
+        dept_id: "603502e021778663b01a974f",
+        dept_name_abbrev: "ANATOMY",
+        dept_name: "Anatomy and Neurobiology",
+        dept_courses: [
+          {
+            static_course_id: "603502e021778663b01a974f",
+            static_course_name: "2A",
+          },
+          {
+            static_course_id: "603502e021778663b01a974f",
+            static_course_name: "2B",
+          },
+        ],
+      },
+    ];
+    return cb(null, template);
+  };
+
+  School.remoteMethod("getCourseNames", {
+    description:
+      "6-8 获取所有专业+课程，该API用于6-8的“学科和课号”按钮，返回内容包括状态code和data，返回内容显示在6-9页面。",
+    http: { path: "/getCourseNames", verb: "post" },
+    accepts: [
+      {
+        arg: "ltx_school_id",
+        type: "string",
+        required: true,
+        description: "留同学App中定义的学校ID",
+      },
+    ],
+    returns: { arg: "result", type: "array" },
+  });
+
+  School.searchProfs = function (ltx_school_id, keyword, cb) {
+    if (ltx_school_id == "1") {
+      let errObj = new Error();
+      errObj.name = "School Not Exist";
+      errObj.message = "School Not Exist";
+      errObj.status = 404;
+      return cb(errObj);
+    }
+    if (keyword == "1") {
+      let errObj = new Error();
+      errObj.name = "No available profs";
+      errObj.message = "No available profs";
+      errObj.status = 405;
+      return cb(errObj);
+    }
+    let template = [
+      {
+        prof_id: "603502e021778663b01a974f",
+        prof_name: "Peter, W.",
+        belong_dept_name: "ANTHRO",
+      },
+      {
+        prof_id: "603502e021778663b01a974f",
+        prof_name: "Pattis, R.",
+        belong_dept_name: "COMPSCI",
+      },
+    ];
+    return cb(null, template);
+  };
+
+  School.remoteMethod("searchProfs", {
+    description:
+      "6-8 搜索教授, 该API用于6-8的“教授”按钮，返回内容包括状态code和data，返回内容需要在6-9后创建一个新页面。",
+    http: { path: "/searchProfs", verb: "post" },
+    accepts: [
+      {
+        arg: "ltx_school_id",
+        type: "string",
+        required: true,
+        description: "留同学App中定义的学校ID",
+      },
+      {
+        arg: "keyword",
+        type: "string",
+        required: true,
+        description: "关键词用于检索教授",
+      },
+    ],
+    returns: { arg: "result", type: "array" },
+  });
+
+  School.getTerms = function (ltx_school_id, cb) {
+    if (ltx_school_id == "1") {
+      let errObj = new Error();
+      errObj.name = "School Not Exist";
+      errObj.message = "School Not Exist";
+      errObj.status = 404;
+      return cb(errObj);
+    }
+
+    let template = [
+      {
+        term_id: "603502e021778663b01a974f",
+        term_name: "Spring",
+      },
+      {
+        term_id: "603502e021778663b01a974f",
+        term_name: "Summer",
+      },
+      {
+        term_id: "603502e021778663b01a974f",
+        term_name: "Fall",
+      },
+      {
+        term_id: "603502e021778663b01a974f",
+        term_name: "Winter",
+      },
+    ];
+    return cb(null, template);
+  };
+
+  School.remoteMethod("getTerms", {
+    description: "6-8 获取可选择学期",
+    http: { path: "/getTerms", verb: "post" },
+    accepts: [
+      {
+        arg: "ltx_school_id",
+        type: "string",
+        required: true,
+        description: "留同学App中定义的学校ID",
+      },
+    ],
+    returns: { arg: "result", type: "array" },
+  });
+
+  School.searchProfs = function (ltx_school_id, keyword, cb) {
+    if (ltx_school_id == "1") {
+      let errObj = new Error();
+      errObj.name = "School Not Exist";
+      errObj.message = "School Not Exist";
+      errObj.status = 404;
+      return cb(errObj);
+    }
+    if (keyword == "1") {
+      let errObj = new Error();
+      errObj.name = "No such professor";
+      errObj.message = "No such professor";
+      errObj.status = 405;
+      return cb(errObj);
+    }
+
+    let template = [
+      {
+        prof_id: "603502e021778663b01a974f",
+        prof_name: "Peter, W.",
+        belong_dept_name: "ANTHRO",
+      },
+      {
+        prof_id: "603502e021778663b01a974f",
+        prof_name: "Pattis, R.",
+        belong_dept_name: "COMPSCI",
+      },
+    ];
+    return cb(null, template);
+  };
+
+  School.remoteMethod("searchProfs", {
+    description: "6-8/6-16 搜索教授",
+    http: { path: "/searchProfs", verb: "post" },
+    accepts: [
+      {
+        arg: "ltx_school_id",
+        type: "string",
+        required: true,
+        description: "留同学App中定义的学校ID",
+      },
+      {
+        arg: "keyword",
+        type: "string",
+        required: true,
+        description: "关键词用于检索教授",
+      },
+    ],
     returns: { arg: "result", type: "array" },
   });
 
