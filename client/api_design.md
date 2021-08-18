@@ -47,6 +47,23 @@
 
 499: Invalid error test
 ```
+## 用户ID绑定
+
+<details><summary>绑定接口</summary>
+说明：该API在用户于留同学App中成功绑定学校时使用，需要留同学用户ID和学校ID作为参数，返回结果显示success或者error。
+
+[POST /users/bindLtxId]()
+**备注：此接口测试环境未准备好**
+|**变量名**|**解释**|
+|---------|--------|
+|ltx_userid|留同学App数据库中的用户ID|
+|ltx_school_id|留同学App数据库中的学校ID|
+```js
+{
+  "result": "success"
+}
+```
+</details>
 
 ## 空位提醒
 
