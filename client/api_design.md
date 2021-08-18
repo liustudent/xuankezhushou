@@ -609,12 +609,12 @@
 {
   "result": [
     {
-      "prof_id": "603502e021778663b01a974f",
-      "prof_name": "Peter, A."
+      "course_id": "603502e021778663b01a974f",
+      "course_name_with_num": "COMPSCI 171"
     },
     {
-      "prof_id": "603502e021778663b01a974f",
-      "prof_name": "Pattis, R."
+      "course_id": "603502e021778663b01a974f",
+      "course_name_with_num": "COMPSCI 177"
     }
   ]
 }
