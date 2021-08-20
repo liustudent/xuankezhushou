@@ -228,6 +228,9 @@
 <details><summary>6-6 获取爬取课程详情</summary>
 
 [POST /crawl_courses/getCrawledCourseDetails](explorer/#!/crawl95course/crawl_course_getCrawledCourseDetails)
+"is_followed_by_this_user" 参数说明：如果值为False，界面显示“有空位时提醒我”按钮，此时使用 /users/addToWatchList 接口；若值为True，则页面显示“移出空位提醒“按钮，此时调用 /users/removeFromWatchList 接口
+
+
 - error_test:
   - 1: 410
   - 2: 414
@@ -237,6 +240,7 @@
   "result": {
     "crawl_course_id": "603502e021778663b01a974f",
     "coursename_id": "603502e021778663b01a974f",
+    "is_followed_by_this_user": False,
     "description": "ADV PROD C  ",
     "prof_id": "603502e021778663b01a974f",
     "professor_name": "Klefstad, R.",
