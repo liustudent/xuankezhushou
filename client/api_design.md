@@ -52,8 +52,10 @@
 <details><summary>绑定接口</summary>
 说明：该API在用户于留同学App中成功绑定学校时使用，需要留同学用户ID和学校ID作为参数，返回结果显示success或者error。
 
-[POST /users/bindLtxId]()
-**备注：此接口测试环境未准备好**
+[POST /users/bindLtxId](/explorer/#!/user/bindLtxId)
+- error_test: 
+  - 1: 410
+  - 2: 411
 
 |**变量名**|**解释**|
 |---------|--------|
@@ -230,7 +232,7 @@
 [POST /crawl_courses/getCrawledCourseDetails](explorer/#!/crawl95course/crawl_course_getCrawledCourseDetails)
 
 
-"is_followed_by_this_user" 参数说明：如果值为False，界面显示“有空位时提醒我”按钮，此时使用 /users/addToWatchList 接口；若值为True，则页面显示“移出空位提醒“按钮，此时调用 /users/removeFromWatchList 接口
+"is_followed_by_this_user" 参数说明：如果值为0，界面显示“有空位时提醒我”按钮，此时使用 /users/addToWatchList 接口；若值为True，则页面显示“移出空位提醒“按钮，此时调用 /users/removeFromWatchList 接口
 
 
 - error_test:
@@ -242,7 +244,7 @@
   "result": {
     "crawl_course_id": "603502e021778663b01a974f",
     "coursename_id": "603502e021778663b01a974f",
-    "is_followed_by_this_user": False,
+    "is_followed_by_this_user": 0,
     "description": "ADV PROD C  ",
     "prof_id": "603502e021778663b01a974f",
     "professor_name": "Klefstad, R.",

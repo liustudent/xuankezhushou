@@ -29,6 +29,7 @@ module.exports = function (Crawlcourse) {
     let template = {
       crawl_course_id: "603502e021778663b01a974f",
       coursename_id: "603502e021778663b01a974f",
+      is_followed_by_this_user: 0,
       description: "ADV PROD C  ",
       prof_id: "603502e021778663b01a974f",
       professor_name: "Klefstad, R.",

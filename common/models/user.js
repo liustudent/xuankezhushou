@@ -207,6 +207,62 @@ module.exports = function (User) {
     returns: { arg: "result", type: "string" },
   });
 
+  User.bindLtxId = function (
+    user_id,
+    ltx_school_id,
+    error_test,
+    cb
+  ) {
+    if (error_test) {
+      let errObj = new Error();
+      if (error_test == 1) {
+        errObj.name = "Invalid user";
+        errObj.message = "Invalid user";
+        errObj.status = 410;
+        return cb(errObj);
+      } else if (error_test == 2) {
+        errObj.name = "Invalid school id";
+        errObj.message = "Invalid school id";
+        errObj.status = 411;
+        return cb(errObj);
+      } else {
+        errObj.name = "Invalid error test";
+        errObj.message = "Invalid error test";
+        errObj.status = 499;
+        return cb(errObj);
+      }
+    }
+
+    let template = "success";
+    return cb(null, template);
+  };
+
+  User.remoteMethod("bindLtxId", {
+    description:
+      "该API在用户于留同学App中成功绑定学校时使用，需要留同学用户ID和学校ID作为参数，返回结果显示success或者error。",
+    http: { path: "/bindLtxId", verb: "post" },
+    accepts: [
+      {
+        arg: "user_id",
+        type: "string",
+        required: true,
+        description: "用户ID",
+      },
+      {
+        arg: "ltx_school_id",
+        type: "string",
+        required: true,
+        description: "留同学App学校ID",
+      },
+      {
+        arg: "error_test",
+        type: "number",
+        required: false,
+      },
+    ],
+    returns: { arg: "result", type: "string" },
+  });
+
   User.disableRemoteMethodByName("upsert"); // disables PATCH /users
   User.disableRemoteMethodByName("find"); // disables GET /users
   User.disableRemoteMethodByName("replaceOrCreate"); // disables PUT /users

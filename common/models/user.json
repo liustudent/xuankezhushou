@@ -55,6 +55,13 @@
       "principalId": "normal",
       "permission": "ALLOW",
       "property": "removeFromWatchList"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "normal",
+      "permission": "ALLOW",
+      "property": "bindLtxId"
     }
   ],
   "methods": {}
