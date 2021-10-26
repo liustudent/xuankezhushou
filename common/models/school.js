@@ -150,31 +150,31 @@ module.exports = function (School) {
     }
     let template = [
       {
-        dept_id: "603502e021778663b01a974f",
+        dept_id: "603502e021778663b01a9705",
         dept_name_abbrev: "AC ENG",
         dept_name: "Academic English",
         dept_courses: [
           {
-            static_course_id: "603502e021778663b01a974f",
+            static_course_id: "603502e021778663b01a9707",
             static_course_name: "20B",
           },
           {
-            static_course_id: "603502e021778663b01a974f",
+            static_course_id: "603502e021778663b01a9708",
             static_course_name: "22A",
           },
         ],
       },
       {
-        dept_id: "603502e021778663b01a974f",
+        dept_id: "603502e021778663b01a9706",
         dept_name_abbrev: "ANATOMY",
         dept_name: "Anatomy and Neurobiology",
         dept_courses: [
           {
-            static_course_id: "603502e021778663b01a974f",
+            static_course_id: "603502e021778663b01a9709",
             static_course_name: "2A",
           },
           {
-            static_course_id: "603502e021778663b01a974f",
+            static_course_id: "603502e021778663b01a970A",
             static_course_name: "2B",
           },
         ],

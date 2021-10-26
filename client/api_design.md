@@ -498,6 +498,7 @@
     },
     "reviews": [
       {
+        "review_id": "603502e021778663b01a974f",
         "created": "2020-10-11T00:00:00.000Z",
         "attendance": "Not Mandatary",
         "is_online": "No",
@@ -513,6 +514,7 @@
         "thumbs_down": 0
       },
       {
+        "review_id": "603502e021778663b01a9741",
         "created": "2019-05-02T04:00:00.000Z",
         "attendance": "Not Mandatary",
         "is_online": "No",
@@ -523,7 +525,7 @@
         ],
         "recomend_rate": 3,
         "difficulty_rate": 3,
-        "content": "Klefstad的逻辑太让人头大了，所有人都在抱怨这节课，总的来说这节课不算太难，不需要上lec和discurssion。",
+        "content": "Klefstad太难了。",
         "thumbs_up": 12,
         "thumbs_down": 0
       }

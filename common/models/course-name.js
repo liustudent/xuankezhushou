@@ -137,7 +137,7 @@ module.exports = function (Coursename) {
       ],
       course_grades: [
         {
-          static_course_id: "603502e021778663b01a974f",
+          static_course_id: "603502e021778663b01a9701",
           year_term: "Spring 2021",
           static_course_name: "IN4MX 43",
           prof_id: "603502e021778663b01a974f",
@@ -146,7 +146,7 @@ module.exports = function (Coursename) {
           recommend_rate: 4.3
         },
         {
-          static_course_id: "603502e021778663b01a974f",
+          static_course_id: "603502e021778663b01a9702",
           year_term: "Winter 2020",
           static_course_name: "IN4MX 43",
           prof_id: "603502e021778663b01a974f",

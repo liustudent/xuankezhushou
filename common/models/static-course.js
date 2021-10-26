@@ -34,8 +34,8 @@ module.exports = function (Staticcourse) {
     }
 
     let template = {
-      static_course_id: "603502e021778663b01a974f",
-      coursename_id: "603502e021778663b01a974f",
+      static_course_id: "603502e021778663b01a970C",
+      coursename_id: "603502e021778663b01a970B",
       description: "ADV PROD C  ",
       professor_name: "Klefstad, R.",
       course_name: "COMPSCI 103",
@@ -67,6 +67,7 @@ module.exports = function (Staticcourse) {
       },
       reviews: [
         {
+          review_id: "603502e021778663b01a974f",
           created: "2020-10-11T00:00:00.000Z",
           attendance: "Not Mandatary",
           is_online: "No",
@@ -80,6 +81,7 @@ module.exports = function (Staticcourse) {
           thumbs_down: 0,
         },
         {
+          review_id: "603502e021778663b01a9741",
           created: "2019-05-02T04:00:00.000Z",
           attendance: "Not Mandatary",
           is_online: "No",
@@ -88,7 +90,7 @@ module.exports = function (Staticcourse) {
           recomend_rate: 3,
           difficulty_rate: 3,
           content:
-            "Klefstad的逻辑太让人头大了，所有人都在抱怨这节课，总的来说这节课不算太难，不需要上lec和discurssion。",
+            "Klefstad太难了。",
           thumbs_up: 12,
           thumbs_down: 0,
         },
