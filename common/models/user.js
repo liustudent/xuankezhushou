@@ -18,22 +18,22 @@ module.exports = function (User) {
       if (ctx.instance.roleName) {
         roleName = ctx.instance.roleName;
       }
-      Role.findById(util.roles[roleName], function (err, role) {
-        if (err) return next(err);
-        if (role) {
-          role.principals.create(
-            {
-              principalType: RoleMapping.USER,
-              principalId: ctx.instance.id,
-            },
-            function (err, principal) {
-              if (err) return next(err);
-              console.log("Created principal:", principal);
-              return next();
-            }
-          );
-        } else return next(new Error("Role not found"));
-      });
+      // Role.findById(util.roles[roleName], function (err, role) {
+      //   if (err) return next(err);
+      //   if (role) {
+      //     role.principals.create(
+      //       {
+      //         principalType: RoleMapping.USER,
+      //         principalId: ctx.instance.id,
+      //       },
+      //       function (err, principal) {
+      //         if (err) return next(err);
+      //         console.log("Created principal:", principal);
+      //         return next();
+      //       }
+      //     );
+      //   } else return next(new Error("Role not found"));
+      // });
     } else next();
   });
   User.getWatchList = function (user_id, error_test, cb) {
@@ -210,31 +210,77 @@ module.exports = function (User) {
   User.bindLtxId = function (
     user_id,
     ltx_school_id,
-    error_test,
     cb
   ) {
-    if (error_test) {
+    if (!user_id){
       let errObj = new Error();
-      if (error_test == 1) {
-        errObj.name = "Invalid user";
-        errObj.message = "Invalid user";
-        errObj.status = 410;
-        return cb(errObj);
-      } else if (error_test == 2) {
-        errObj.name = "Invalid school id";
-        errObj.message = "Invalid school id";
-        errObj.status = 411;
-        return cb(errObj);
-      } else {
-        errObj.name = "Invalid error test";
-        errObj.message = "Invalid error test";
-        errObj.status = 499;
-        return cb(errObj);
-      }
+      errObj.name = "Invalid user";
+      errObj.message = "Invalid user";
+      errObj.status = 410;
+      return cb(errObj);
+    }
+    if (!ltx_school_id){
+      let errObj = new Error();
+      errObj.name = "Invalid school id";
+      errObj.message = "Invalid school id";
+      errObj.status = 411;
+      return cb(errObj);
     }
 
-    let template = "success";
-    return cb(null, template);
+    User.findOne(
+      {
+        where: {"ltx_userid": user_id},
+      }, 
+      function (err, userInstance){
+        if (err){
+          console.log(err);
+          return cb(err);
+        }else{
+          if (userInstance){
+            // 学校变更
+            userInstance['school_id'] = ltx_school_id.toString();
+            userInstance.save();
+            return cb(null, "school_change_success");
+          }else{
+            // 初次绑定学校
+            let data = {}
+            data['ltx_userid'] = user_id.toString();
+            data['school_id'] = ltx_school_id.toString();
+            data['password'] = user_id.toString();
+            data['email'] = `${user_id}@turingedtech.com`;
+            User.create(data, function(err, userInstance){
+              if(err){
+                console.log(err)
+                return cb(err);
+              }else{
+                return cb(null, "success");
+              }
+            })
+            return cb(null, "success");
+          }
+        }
+      })
+      
+
+    // if (error_test) {
+    //   let errObj = new Error();
+    //   if (error_test == 1) {
+    //     errObj.name = "Invalid user";
+    //     errObj.message = "Invalid user";
+    //     errObj.status = 410;
+    //     return cb(errObj);
+    //   } else if (error_test == 2) {
+    //     errObj.name = "Invalid school id";
+    //     errObj.message = "Invalid school id";
+    //     errObj.status = 411;
+    //     return cb(errObj);
+    //   } else {
+    //     errObj.name = "Invalid error test";
+    //     errObj.message = "Invalid error test";
+    //     errObj.status = 499;
+    //     return cb(errObj);
+    //   }
+    // }
   };
 
   User.remoteMethod("bindLtxId", {
@@ -253,11 +299,6 @@ module.exports = function (User) {
         type: "string",
         required: true,
         description: "留同学App学校ID",
-      },
-      {
-        arg: "error_test",
-        type: "number",
-        required: false,
       },
     ],
     returns: { arg: "result", type: "string" },

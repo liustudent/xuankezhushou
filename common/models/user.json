@@ -16,7 +16,11 @@
     },
     "roleName": {
       "type": "string",
-      "default": "normal"
+      "default": "student"
+    },
+    "school_id":{
+      "type": "string",
+      "required": true
     }
   },
   "validations": [],
