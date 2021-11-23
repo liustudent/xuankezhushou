@@ -13,9 +13,8 @@
     "description": {
       "type": "string"
     },
-    "dept_name": {
-      "type": "string",
-      "required": true
+    "gpa_avg_for_all": {
+      "type": "string"
     },
     "course_number": {
       "type": "string",
@@ -45,6 +44,11 @@
       "type": "hasMany",
       "model": "static_course",
       "foreignKey": "course_name_id"
+    },
+    "school": {
+      "type": "belongsTo",
+      "model": "school",
+      "foreignKey": "school_id"
     }
   },
   "acls": [

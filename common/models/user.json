@@ -17,10 +17,6 @@
     "roleName": {
       "type": "string",
       "default": "student"
-    },
-    "school_id":{
-      "type": "string",
-      "required": true
     }
   },
   "validations": [],
@@ -30,6 +26,11 @@
       "model": "course_name",
       "foreignKey": "user_id",
       "through": "watch_course"
+    },
+    "schools":{
+      "type": "belongsTo",
+      "model": "school",
+      "foreignKey": "school_id"
     }
   },
   "acls": [

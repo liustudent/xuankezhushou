@@ -7,7 +7,7 @@
   },
   "properties": {
     "gpa_avg": {
-      "type": "string"
+      "type": "number"
     },
     "grade_a_count": {
       "type": "number"
@@ -32,7 +32,13 @@
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+    "static_course": {
+      "type": "belongsTo",
+      "model": "static_course",
+      "foreignKey": "static_course_id"
+    }
+  },
   "acls": [
     {
       "accessType": "*",

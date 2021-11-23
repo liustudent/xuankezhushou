@@ -1,6 +1,9 @@
 "use strict";
 const app = require("../../server/server");
 var util = require("../utils/util");
+const { ObjectId } = require('mongodb');
+const e = require("express");
+const { model } = require("../../server/server");
 module.exports = function (User) {
   // 创建新的账号的时候，分配它们的role
   User.observe("after save", function (ctx, next) {
@@ -36,49 +39,103 @@ module.exports = function (User) {
       // });
     } else next();
   });
-  User.getWatchList = function (user_id, error_test, cb) {
-    if (error_test) {
+  User.getWatchList = function (user_id, cb) {
+    if (!user_id) {
       let errObj = new Error();
-      if (error_test == 1) {
-        errObj.name = "Invalid user";
-        errObj.message = "Invalid user";
-        errObj.status = 410;
-        return cb(errObj);
-      } else if (error_test == 2) {
-        errObj.name = "Empty list but maybe have some";
-        errObj.message = "Empty list but maybe have some";
-        errObj.status = 421;
-        return cb(errObj);
-      } else {
-        errObj.name = "Invalid error test";
-        errObj.message = "Invalid error test";
-        errObj.status = 499;
-        return cb(errObj);
-      }
+      errObj.name = "Empty field";
+      errObj.message = "Empty field";
+      errObj.status = 422;
+      errObj.stack = ""
+      return cb(errObj);
     }
-    let template = [
-      {
-        course_id: "1",
-        course_name: "ECON 100A",
-        course_section: "A",
-        course_code: "20012",
-        class_day: ["Tu", "Th"],
-        start_time: "9:30",
-        end_time: "10:50",
-        status: "FULL",
-      },
-      {
-        course_id: "2",
-        course_name: "ECON 100A",
-        course_section: "1",
-        course_code: "20013",
-        class_day: ["Tu", "Th"],
-        start_time: "9:30",
-        end_time: "10:50",
-        status: "OPEN",
-      },
-    ];
-    return cb(null, template);
+
+    let real_user_id;
+
+    let userValidation = new Promise((resolve, reject) => {
+      app.models.User.findOne(
+        {
+          where: {"ltx_userid": user_id}
+        },
+        function(err, userInstance){
+          if(err || !userInstance){
+            let errObj = new Error();
+            errObj.name = "Invalid user id";
+            errObj.message = "Invalid user id";
+            errObj.status = 410;
+            errObj.stack = ""
+            reject(errObj)
+          }else{
+            real_user_id = userInstance.id;
+            resolve(true)
+          }
+        }
+      )
+    })
+    
+    Promise.all([userValidation])
+    .then(()=>{
+      let result = []
+      new Promise((resolve, reject)=>{
+        app.models.WatchCourse.find(
+          {
+            where: {"user_id": ObjectId(real_user_id)}
+          },
+          function(err, watchListInstance){
+            if(err){
+              reject(err)
+            }else{
+              if(watchListInstance){
+                for(let i in watchListInstance){
+                  let course_id = watchListInstance[i].crawl_course_id;
+                  // inner promise for fetching course details
+                  new Promise((resolveIn, rejectIn)=>{
+                    app.models.CrawlCourse.findById(course_id,
+                      function(err, courseInstance){
+                        if(err){
+                          rejectIn(err);
+                        }else{
+                          if(courseInstance){
+                            let temp = {
+                              course_id: courseInstance['id'],
+                              course_name: courseInstance['name'],
+                              course_section: courseInstance['section'],
+                              course_code: courseInstance['course_code'],
+                              class_day: courseInstance['class_day'],
+                              start_time: courseInstance['start_time'],
+                              end_time: courseInstance['end_time'],
+                              status: courseInstance['status'],
+                            }
+                            result.push(temp);
+                            resolveIn(true)
+                          }else{
+                            rejectIn("NOT FOUND");
+                          }
+                        }
+                      })
+                  })
+                  .then(()=>{
+                    if(i==watchListInstance.length-1){
+                      resolve(true)
+                    }
+                  })
+                  .catch((err)=>{return cb(err)})
+                }
+              }else{
+                reject("NOT FOUND")
+              }
+            }
+          }
+        )
+      })
+      .then(()=>{
+        return cb(null, result)
+      })
+      .catch((err)=>{return cb(err)})
+    })
+    .catch((errObj)=>{
+      return cb(errObj)
+    })
+    
   };
 
   User.remoteMethod("getWatchList", {
@@ -91,38 +148,85 @@ module.exports = function (User) {
         type: "string",
         required: true,
         description: "用户ID",
-      },
-      {
-        arg: "error_test",
-        type: "number",
-        required: false,
-      },
+      }
     ],
     returns: { arg: "result", type: "array" },
   });
 
-  User.addToWatchList = function (user_id, crawl_course_id, error_test, cb) {
-    if (error_test) {
+  User.addToWatchList = function (user_id, crawl_course_id, cb) {
+    if (!crawl_course_id || !user_id) {
       let errObj = new Error();
-      if (error_test == 1) {
-        errObj.name = "Invalid user";
-        errObj.message = "Invalid user";
-        errObj.status = 410;
-        return cb(errObj);
-      } else if (error_test == 2) {
-        errObj.name = "Invalid crawl course";
-        errObj.message = "Invalid user";
-        errObj.status = 414;
-        return cb(errObj);
-      } else {
-        errObj.name = "Invalid error test";
-        errObj.message = "Invalid error test";
-        errObj.status = 499;
-        return cb(errObj);
-      }
+      errObj.name = "Empty field";
+      errObj.message = "Empty field";
+      errObj.status = 422;
+      errObj.stack = ""
+      return cb(errObj);
     }
-    let template = "success";
-    return cb(null, template);
+
+    let real_user_id;
+
+    let userValidation = new Promise((resolve, reject) => {
+      app.models.User.findOne(
+        {
+          where: {"ltx_userid": user_id}
+        },
+        function(err, userInstance){
+          if(err || !userInstance){
+            let errObj = new Error();
+            errObj.name = "Invalid user id";
+            errObj.message = "Invalid user id";
+            errObj.status = 410;
+            errObj.stack = ""
+            reject(errObj)
+          }else{
+            real_user_id = userInstance.id;
+            resolve(true)
+          }
+        }
+      )
+    })
+    
+    Promise.all([userValidation])
+    .then(()=>{
+      let temp = {
+        user_id: ObjectId(real_user_id),
+        crawl_course_id: ObjectId(crawl_course_id)
+      }
+      // find crawl course details
+      new Promise((resolve, reject)=>{
+        app.models.CrawlCourse.findById(
+          crawl_course_id,
+          function(err, courseInstance){
+            if(err){
+              reject(err)
+            }else{
+              if(courseInstance){
+                temp.course_code = courseInstance.course_code;
+                temp.course_status = courseInstance.status;
+                temp.courseName_id = ObjectId(courseInstance.courseName_id);
+                resolve(true);
+              }else{
+                reject()
+              }
+            }
+          }
+        )
+      })
+      .then(()=>{
+        // upsert watch course item
+        app.models.WatchCourse.findOrCreate(
+          {where: temp},
+          temp
+        )
+        .then(()=>{
+          return cb(null,"success")
+        })
+      })
+    })
+    .catch((errObj)=>{
+      return cb(errObj)
+    })
+
   };
 
   User.remoteMethod("addToWatchList", {
@@ -141,12 +245,7 @@ module.exports = function (User) {
         type: "string",
         required: true,
         description: "爬取课程编号",
-      },
-      {
-        arg: "error_test",
-        type: "number",
-        required: false,
-      },
+      }
     ],
     returns: { arg: "result", type: "string" },
   });
@@ -154,31 +253,83 @@ module.exports = function (User) {
   User.removeFromWatchList = function (
     user_id,
     crawl_course_id,
-    error_test,
     cb
   ) {
-    if (error_test) {
+    if (!crawl_course_id || !user_id) {
       let errObj = new Error();
-      if (error_test == 1) {
-        errObj.name = "Invalid user";
-        errObj.message = "Invalid user";
-        errObj.status = 410;
-        return cb(errObj);
-      } else if (error_test == 2) {
-        errObj.name = "Invalid crawl course";
-        errObj.message = "Invalid crawl course";
-        errObj.status = 414;
-        return cb(errObj);
-      } else {
-        errObj.name = "Invalid error test";
-        errObj.message = "Invalid error test";
-        errObj.status = 499;
-        return cb(errObj);
-      }
+      errObj.name = "Empty field";
+      errObj.message = "Empty field";
+      errObj.status = 422;
+      errObj.stack = ""
+      return cb(errObj);
     }
 
-    let template = "success";
-    return cb(null, template);
+    let real_user_id;
+
+    let userValidation = new Promise((resolve, reject) => {
+      app.models.User.findOne(
+        {
+          where: {"ltx_userid": user_id}
+        },
+        function(err, userInstance){
+          if(err || !userInstance){
+            let errObj = new Error();
+            errObj.name = "Invalid user id";
+            errObj.message = "Invalid user id";
+            errObj.status = 410;
+            errObj.stack = ""
+            reject(errObj)
+          }else{
+            real_user_id = userInstance.id;
+            resolve(true)
+          }
+        }
+      )
+    })
+    
+    Promise.all([userValidation])
+    .then(()=>{
+      let temp = {
+        user_id: ObjectId(real_user_id),
+        crawl_course_id: ObjectId(crawl_course_id)
+      }
+      new Promise((resolve, reject)=>{
+        app.models.WatchCourse.findOne(
+          {where: temp}
+          ,function(err, watchCourseInstance){
+            if(err){
+              reject(err)
+            }else{
+              if(watchCourseInstance){
+                app.models.WatchCourse.deleteById(
+                  watchCourseInstance.id,
+                  function(err){
+                    if(err){
+                      console.log(err)
+                      reject(err)
+
+                    }else{
+                      resolve(true)
+                    }
+                  }
+                )
+              }else{
+                resolve(true)
+              }
+            }
+          }
+        )
+      })
+      .then(()=>{
+        return cb(null, "success");
+      })
+      .catch((err)=>{
+        return cb(err)
+      })
+    })
+    .catch((errObj)=>{
+      return cb(errObj)
+    })
   };
 
   User.remoteMethod("removeFromWatchList", {
@@ -197,12 +348,7 @@ module.exports = function (User) {
         type: "string",
         required: true,
         description: "爬取课程编号",
-      },
-      {
-        arg: "error_test",
-        type: "number",
-        required: false,
-      },
+      }
     ],
     returns: { arg: "result", type: "string" },
   });
@@ -217,6 +363,7 @@ module.exports = function (User) {
       errObj.name = "Invalid user";
       errObj.message = "Invalid user";
       errObj.status = 410;
+      errObj.stack = ""
       return cb(errObj);
     }
     if (!ltx_school_id){
@@ -224,63 +371,71 @@ module.exports = function (User) {
       errObj.name = "Invalid school id";
       errObj.message = "Invalid school id";
       errObj.status = 411;
+      errObj.stack = ""
       return cb(errObj);
     }
 
-    User.findOne(
+    // 查找school ID
+    app.models.School.findOne(
       {
-        where: {"ltx_userid": user_id},
-      }, 
-      function (err, userInstance){
-        if (err){
+        where: {'ltx_school_id': ltx_school_id},
+      },
+      function (err, schoolInstance){
+        if(err){
           console.log(err);
-          return cb(err);
+          let errObj = new Error();
+          errObj.name = "Invalid school id";
+          errObj.message = "Invalid school id";
+          errObj.status = 411;
+          errObj.stack = ""
+          return cb(errObj);
         }else{
-          if (userInstance){
-            // 学校变更
-            userInstance['school_id'] = ltx_school_id.toString();
-            userInstance.save();
-            return cb(null, "school_change_success");
-          }else{
-            // 初次绑定学校
-            let data = {}
-            data['ltx_userid'] = user_id.toString();
-            data['school_id'] = ltx_school_id.toString();
-            data['password'] = user_id.toString();
-            data['email'] = `${user_id}@turingedtech.com`;
-            User.create(data, function(err, userInstance){
-              if(err){
-                console.log(err)
-                return cb(err);
-              }else{
-                return cb(null, "success");
-              }
+          if (schoolInstance){
+            let existedSchoolId = schoolInstance.id
+            User.findOne(
+              {
+                where: {"ltx_userid": user_id},
+              }, 
+              function (err, userInstance){
+                if (err){
+                  console.log(err);
+                  return cb(err);
+                }else{
+                  if (userInstance){
+                    // 学校变更
+                    userInstance['school_id'] = ObjectId(existedSchoolId);
+                    userInstance.save();
+                    return cb(null, "school_change_success");
+                  }else{
+                    // 初次绑定学校
+                    let data = {}
+                    data['ltx_userid'] = user_id.toString();
+                    data['school_id'] = ObjectId(existedSchoolId);
+                    data['password'] = user_id.toString();
+                    data['email'] = `${user_id}@turingedtech.com`;
+                    User.create(data, function(err, userInstance){
+                      if(err){
+                        console.log(err)
+                        return cb(err);
+                      }else{
+                        return cb(null, "success");
+                      }
+                    })
+                    return cb(null, "success");
+                  }
+                }
             })
-            return cb(null, "success");
+          }else{
+            let errObj = new Error();
+            errObj.name = "Invalid school id";
+            errObj.message = "Invalid school id";
+            errObj.status = 411;
+            errObj.stack = ""
+            return cb(errObj);
           }
         }
-      })
-      
-
-    // if (error_test) {
-    //   let errObj = new Error();
-    //   if (error_test == 1) {
-    //     errObj.name = "Invalid user";
-    //     errObj.message = "Invalid user";
-    //     errObj.status = 410;
-    //     return cb(errObj);
-    //   } else if (error_test == 2) {
-    //     errObj.name = "Invalid school id";
-    //     errObj.message = "Invalid school id";
-    //     errObj.status = 411;
-    //     return cb(errObj);
-    //   } else {
-    //     errObj.name = "Invalid error test";
-    //     errObj.message = "Invalid error test";
-    //     errObj.status = 499;
-    //     return cb(errObj);
-    //   }
-    // }
+      }
+    )
   };
 
   User.remoteMethod("bindLtxId", {

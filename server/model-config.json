@@ -99,5 +99,9 @@
   "watch_course": {
     "dataSource": "liu",
     "public": true
+  },
+  "proflink": {
+    "dataSource": "liu",
+    "public": true
   }
 }

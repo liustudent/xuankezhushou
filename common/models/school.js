@@ -1,5 +1,7 @@
 "use strict";
 const app = require("../../server/server");
+const { ObjectId } = require('mongodb');
+
 module.exports = function (School) {
   School.addNewSchool = function (
     name,
@@ -57,44 +59,94 @@ module.exports = function (School) {
     returns: { arg: "result", type: "object" },
   });
 
-  School.getAllDepts = function (ltx_school_id, user_id, error_test, cb) {
-    if (error_test) {
+  School.getAllDepts = function (ltx_school_id, user_id, cb) {
+    // 空串错误检测
+    if (!user_id || !ltx_school_id){
       let errObj = new Error();
-      if (error_test == 1) {
-        errObj.name = "Invalid user";
-        errObj.message = "Invalid user";
-        errObj.status = 410;
-        return cb(errObj);
-      } else if (error_test == 2) {
-        errObj.name = "Invalid school";
-        errObj.message = "Invalid school";
-        errObj.status = 411;
-        return cb(errObj);
-      } else if (error_test == 3) {
-        errObj.name = "Empty list but it should not be empty";
-        errObj.message = "Empty list but it should not be empty";
-        errObj.status = 420;
-        return cb(errObj);
-      } else {
-        errObj.name = "Invalid error test";
-        errObj.message = "Invalid error test";
-        errObj.status = 499;
-        return cb(errObj);
-      }
+      errObj.name = "Invalid Query!";
+      errObj.message = "Invalid Query!";
+      errObj.status = 410;
+      errObj.stack = ""
+      return cb(errObj);
     }
-    let template = [
-      {
-        dept_id: "1",
-        dept_name: "Computer Science",
-        dept_name_abbrev: "COMPSCI",
-      },
-      {
-        dept_id: "2",
-        dept_name: "Academic English",
-        dept_name_abbrev: "AC ENG",
-      },
-    ];
-    return cb(null, template);
+    let schoolId;
+    // 无效数据检测
+    let userValidation = new Promise((resolve, reject) => {
+      app.models.User.findOne(
+        {
+          where: {"ltx_userid": user_id}
+        },
+        function(err, userInstance){
+          if(err || !userInstance){
+            let errObj = new Error();
+            errObj.name = "Invalid user id";
+            errObj.message = "Invalid user id";
+            errObj.status = 410;
+            errObj.stack = ""
+            reject(errObj)
+          }else{
+            resolve(true)
+          }
+        }
+      )
+    })
+    
+    let schoolValidation = new Promise((resolve, reject) => {
+      School.findOne(
+        {
+          where: {"ltx_school_id": ltx_school_id}
+        },
+        function(err, schoolInstance){
+          if(err || !schoolInstance){
+            let errObj = new Error();
+            errObj.name = "Invalid school id";
+            errObj.message = "Invalid school id";
+            errObj.status = 411;
+            errObj.stack = ""
+            reject(errObj)
+          }else{
+            schoolId = schoolInstance.id;
+            resolve(true)
+          }
+        }
+      )
+    })
+
+    
+    Promise.all([userValidation, schoolValidation])
+    .then(()=>{
+      // 查询数据
+      app.models.Department.find(
+        {
+          where: {'school_id': ObjectId(schoolId)}
+        },
+        function(err, departmentInstance){
+          if(err){
+            console.log(err);
+            return cb(err);
+          }else{
+            if(departmentInstance){
+              let result = []
+              departmentInstance.forEach(dpt => {
+                let temp = {
+                  dept_id: dpt['id'],
+                  dept_name: dpt['name'],
+                  dept_name_abbrev: dpt['nameAbbrev'],
+                }
+                result.push(temp)
+              });
+              return cb(null, result)
+            }else{
+              return cb(null, ["No Available Department"])
+            }
+          }
+        }
+      )
+    })
+    .catch((errObj)=>{
+      return cb(errObj)
+    })
+    
   };
 
   School.remoteMethod("getAllDepts", {
@@ -113,74 +165,155 @@ module.exports = function (School) {
         type: "string",
         required: true,
         description: "用户ID",
-      },
-      {
-        arg: "error_test",
-        type: "number",
-        required: false,
-      },
+      }
     ],
     returns: { arg: "result", type: "array" },
   });
 
-  School.getCourseNames = function (ltx_school_id, user_id, error_test, cb) {
-    if (error_test) {
+  School.getCourseNames = function (ltx_school_id, user_id, cb) {
+    // 空串错误检测
+    if (!user_id){
       let errObj = new Error();
-      if (error_test == 1) {
-        errObj.name = "Invalid user";
-        errObj.message = "Invalid user";
-        errObj.status = 410;
-        return cb(errObj);
-      } else if (error_test == 2) {
-        errObj.name = "Invalid school";
-        errObj.message = "Invalid school";
-        errObj.status = 411;
-        return cb(errObj);
-      } else if (error_test == 3) {
-        errObj.name = "Empty list but it should not be empty";
-        errObj.message = "Empty list but it should not be empty";
-        errObj.status = 420;
-        return cb(errObj);
-      } else {
-        errObj.name = "Invalid error test";
-        errObj.message = "Invalid error test";
-        errObj.status = 499;
-        return cb(errObj);
-      }
+      errObj.name = "User Id is required";
+      errObj.message = "User Id is required";
+      errObj.status = 410;
+      errObj.stack = ""
+      return cb(errObj);
     }
-    let template = [
-      {
-        dept_id: "603502e021778663b01a9705",
-        dept_name_abbrev: "AC ENG",
-        dept_name: "Academic English",
-        dept_courses: [
+    if (!ltx_school_id){
+      let errObj = new Error();
+      errObj.name = "School Id is required";
+      errObj.message = "School Id is required";
+      errObj.status = 411;
+      errObj.stack = ""
+      return cb(errObj);
+    }
+
+    let schoolId;
+    // 无效数据检测
+    let userValidation = new Promise((resolve, reject) => {
+      app.models.User.findOne(
+        {
+          where: {"ltx_userid": user_id}
+        },
+        function(err, userInstance){
+          if(err || !userInstance){
+            let errObj = new Error();
+            errObj.name = "Invalid user id";
+            errObj.message = "Invalid user id";
+            errObj.status = 410;
+            errObj.stack = ""
+            reject(errObj)
+          }else{
+            resolve(true)
+          }
+        }
+      )
+    })
+    
+    let schoolValidation = new Promise((resolve, reject) => {
+      School.findOne(
+        {
+          where: {"ltx_school_id": ltx_school_id}
+        },
+        function(err, schoolInstance){
+          if(err || !schoolInstance){
+            let errObj = new Error();
+            errObj.name = "Invalid school id";
+            errObj.message = "Invalid school id";
+            errObj.status = 411;
+            errObj.stack = ""
+            reject(errObj)
+          }else{
+            schoolId = schoolInstance.id;
+            resolve(true)
+          }
+        }
+      )
+    })
+
+    
+    Promise.all([userValidation, schoolValidation])
+    .then(()=>{
+      // 查询数据
+      let result = []
+      new Promise((resolveOut, rejectOut)=>{
+        app.models.Department.find(
           {
-            static_course_id: "603502e021778663b01a9707",
-            static_course_name: "20B",
+            where: {'school_id': schoolId}
           },
-          {
-            static_course_id: "603502e021778663b01a9708",
-            static_course_name: "22A",
-          },
-        ],
-      },
-      {
-        dept_id: "603502e021778663b01a9706",
-        dept_name_abbrev: "ANATOMY",
-        dept_name: "Anatomy and Neurobiology",
-        dept_courses: [
-          {
-            static_course_id: "603502e021778663b01a9709",
-            static_course_name: "2A",
-          },
-          {
-            static_course_id: "603502e021778663b01a970A",
-            static_course_name: "2B",
-          },
-        ],
-      },
-    ];
-    return cb(null, template);
+          async function(err, departmentInstance){
+            if(err){
+              console.log(err);
+              rejectOut(err);
+            }else{
+              if(departmentInstance){
+                for(let i in departmentInstance){
+                  const dpt = departmentInstance[i]
+                  let temp = {
+                    dept_id: dpt['id'],
+                    dept_name_abbrev: dpt['nameAbbrev'],
+                    dept_name: dpt['name'],
+                    dept_courses: []
+                  }
+                  // console.log(ObjectId(dpt['id']))
+                  // 查询dept id对应的course name
+                  new Promise((resolveIn, rejectIn)=>{
+                    app.models.CourseName.find(
+                      {
+                        where: {'department_id': ObjectId(dpt['id'])}
+                      },
+                      function(err, courseNameInstance){
+                        if(err){
+                          console.log(err);
+                          rejectIn(err);
+                        }else{
+                          if(courseNameInstance){
+                            // console.log(courseNameInstance)
+                            courseNameInstance.forEach(cn => {
+                              let tempCourse = {
+                                static_course_id: cn['id'],
+                                static_course_name: cn['course_number']
+                              }
+                              temp.dept_courses.push(tempCourse);
+                              // console.log("1", temp)
+                            })
+                            // await Promise.all([inPromise]);
+                            resolveIn(true)
+                          }else{
+                            console.log(err);
+                            rejectIn(err);
+                          }
+                        }
+                      }
+                    )
+                    
+                  })
+                  .then(()=>{
+                    result.push(temp);
+                    // console.log("2",result)
+                    if(result.length==departmentInstance.length){
+                      resolveOut(true)
+                      // console.log("3",result)
+                    }
+                  })
+                }
+              }else{
+                console.log(err);
+                rejectOut(err);
+              }
+            }
+          }
+        )
+      })
+      .then(()=>{
+        return cb(null, result);
+      })
+    })
+    .catch((errObj) => {
+      // validation 错误信息回调
+      return cb(errObj)
+    })
   };
 
   School.remoteMethod("getCourseNames", {
@@ -199,12 +332,7 @@ module.exports = function (School) {
         type: "string",
         required: true,
         description: "用户ID",
-      },
-      {
-        arg: "error_test",
-        type: "number",
-        required: false,
-      },
+      }
     ],
     returns: { arg: "result", type: "array" },
   });
@@ -213,46 +341,92 @@ module.exports = function (School) {
     ltx_school_id,
     keyword,
     user_id,
-    error_test,
     cb
   ) {
-    if (error_test) {
+    // 空串错误检测
+    if (!user_id || !ltx_school_id){
       let errObj = new Error();
-      if (error_test == 1) {
-        errObj.name = "Invalid user";
-        errObj.message = "Invalid user";
-        errObj.status = 410;
-        return cb(errObj);
-      } else if (error_test == 2) {
-        errObj.name = "Invalid school";
-        errObj.message = "Invalid school";
-        errObj.status = 411;
-        return cb(errObj);
-      } else if (error_test == 3) {
-        errObj.name = "Empty list but maybe have some ";
-        errObj.message = "Empty list but maybe have some ";
-        errObj.status = 421;
-        return cb(errObj);
-      } else {
-        errObj.name = "Invalid error test";
-        errObj.message = "Invalid error test";
-        errObj.status = 499;
-        return cb(errObj);
-      }
+      errObj.name = "Invalid Query!";
+      errObj.message = "Invalid Query!";
+      errObj.status = 410;
+      errObj.stack = ""
+      return cb(errObj);
     }
-    let template = [
-      {
-        prof_id: "603502e021778663b01a974f",
-        prof_name: "Peter, W.",
-        belong_dept_name: "ANTHRO",
-      },
-      {
-        prof_id: "603502e021778663b01a974f",
-        prof_name: "Pattis, R.",
-        belong_dept_name: "COMPSCI",
-      },
-    ];
-    return cb(null, template);
+    let schoolId;
+    // 无效数据检测
+    let userValidation = new Promise((resolve, reject) => {
+      app.models.User.findOne(
+        {
+          where: {"ltx_userid": user_id}
+        },
+        function(err, userInstance){
+          if(err || !userInstance){
+            let errObj = new Error();
+            errObj.name = "Invalid user id";
+            errObj.message = "Invalid user id";
+            errObj.status = 410;
+            errObj.stack = ""
+            reject(errObj)
+          }else{
+            resolve(true)
+          }
+        }
+      )
+    })
+    
+    let schoolValidation = new Promise((resolve, reject) => {
+      School.findOne(
+        {
+          where: {"ltx_school_id": ltx_school_id}
+        },
+        function(err, schoolInstance){
+          if(err || !schoolInstance){
+            let errObj = new Error();
+            errObj.name = "Invalid school id";
+            errObj.message = "Invalid school id";
+            errObj.status = 411;
+            errObj.stack = ""
+            reject(errObj)
+          }else{
+            schoolId = schoolInstance.id;
+            resolve(true)
+          }
+        }
+      )
+    })
+
+    
+    Promise.all([userValidation, schoolValidation])
+    .then(()=>{
+      let result = []
+      app.models.Professor.find(
+        {
+          where: {'school_id': ObjectId(schoolId), 'name': { regexp: `/${keyword}/i`}}
+        },
+        function(err, professorInstance){
+          if(err){
+            console.log(err)
+            return cb(err)
+          }else{
+            if(professorInstance){
+              professorInstance.forEach(prof => {
+                let temp = {
+                  prof_id: prof['id'],
+                  prof_name: prof['name'],
+                  belong_dept_name: prof['department_name']
+                }
+                result.push(temp)
+              });
+              return cb(null, result)
+            }
+          }
+        }
+      )
+    })
+    .catch((errObj)=>{
+      return cb(errObj)
+    })
+
   };
 
   School.remoteMethod("searchProfs", {
@@ -277,44 +451,63 @@ module.exports = function (School) {
         type: "string",
         required: true,
         description: "用户ID",
-      },
-      {
-        arg: "error_test",
-        type: "number",
-        required: false,
-      },
+      }
     ],
     returns: { arg: "result", type: "array" },
   });
 
   School.getTerms = function (ltx_school_id, cb) {
-    if (ltx_school_id == "1") {
+    // 空串错误检测
+    if (!ltx_school_id){
       let errObj = new Error();
-      errObj.name = "School Not Exist";
-      errObj.message = "School Not Exist";
-      errObj.status = 404;
+      errObj.name = "Invalid Query!";
+      errObj.message = "Invalid Query!";
+      errObj.status = 410;
+      errObj.stack = ""
       return cb(errObj);
     }
+    let schoolId;
+    // 无效数据检测
+    let schoolValidation = new Promise((resolve, reject) => {
+      School.findOne(
+        {
+          where: {"ltx_school_id": ltx_school_id}
+        },
+        function(err, schoolInstance){
+          if(err || !schoolInstance){
+            let errObj = new Error();
+            errObj.name = "Invalid school id";
+            errObj.message = "Invalid school id";
+            errObj.status = 411;
+            errObj.stack = ""
+            reject(errObj)
+          }else{
+            schoolId = schoolInstance.id;
+            resolve(true)
+          }
+        }
+      )
+    })
 
-    let template = [
-      {
-        term_id: "603502e021778663b01a974f",
-        term_name: "Spring",
-      },
-      {
-        term_id: "603502e021778663b01a974f",
-        term_name: "Summer",
-      },
-      {
-        term_id: "603502e021778663b01a974f",
-        term_name: "Fall",
-      },
-      {
-        term_id: "603502e021778663b01a974f",
-        term_name: "Winter",
-      },
-    ];
-    return cb(null, template);
+    
+    Promise.all([schoolValidation])
+    .then(()=>{
+      app.models.Term.find({},
+        function(err, termInstance){
+          if(err){
+            console.log(err)
+            return cb(err)
+          }else{
+            if(termInstance){
+              return cb(null, termInstance);
+            }
+          }
+        }
+      )
+    })
+    .catch((errObj)=>{
+      return cb(errObj)
+    })
   };
 
   School.remoteMethod("getTerms", {

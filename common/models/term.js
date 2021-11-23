@@ -15,15 +15,15 @@ module.exports = function (Term) {
   Term.disableRemoteMethodByName("findOne"); // disables GET /terms/findOne
   Term.disableRemoteMethodByName("update"); // disables POST /terms/update
   Term.disableRemoteMethodByName("upsertWithWhere"); // disables POST /terms/upsertWithWhere
-  Term.disableRemoteMethodByName("prototype.__get__school"); //disables GET /terms/{id}/school
-  Term.disableRemoteMethodByName("prototype.__get__years"); //disables GET /terms/{id}/years
-  Term.disableRemoteMethodByName("prototype.__create__years"); //disables POST /terms/{id}/years
-  Term.disableRemoteMethodByName("prototype.__delete__years"); //disables DELETE /terms/{id}/years
-  Term.disableRemoteMethodByName("prototype.__findById__years"); //disables GET /terms/{id}/years/{fk}
-  Term.disableRemoteMethodByName("prototype.__updateById__years"); //disables PUT /terms/{id}/years/{fk}
-  Term.disableRemoteMethodByName("prototype.__destroyById__years"); //disables DELETE /terms/{id}/years/{fk}
-  Term.disableRemoteMethodByName("prototype.__count__years"); //disables GET /terms/{id}/years/count
-  Term.disableRemoteMethodByName("prototype.__exists__years"); //disables HEAD /terms/{id}/years/rel/{fk}
-  Term.disableRemoteMethodByName("prototype.__link__years"); //disable PUT /terms/{id}/years/rel/{fk}
-  Term.disableRemoteMethodByName("prototype.__unlink__years"); //disable DELETE /terms/{id}/years/rel/{fk}
+  // Term.disableRemoteMethodByName("prototype.__get__school"); //disables GET /terms/{id}/school
+  // Term.disableRemoteMethodByName("prototype.__get__years"); //disables GET /terms/{id}/years
+  // Term.disableRemoteMethodByName("prototype.__create__years"); //disables POST /terms/{id}/years
+  // Term.disableRemoteMethodByName("prototype.__delete__years"); //disables DELETE /terms/{id}/years
+  // Term.disableRemoteMethodByName("prototype.__findById__years"); //disables GET /terms/{id}/years/{fk}
+  // Term.disableRemoteMethodByName("prototype.__updateById__years"); //disables PUT /terms/{id}/years/{fk}
+  // Term.disableRemoteMethodByName("prototype.__destroyById__years"); //disables DELETE /terms/{id}/years/{fk}
+  // Term.disableRemoteMethodByName("prototype.__count__years"); //disables GET /terms/{id}/years/count
+  // Term.disableRemoteMethodByName("prototype.__exists__years"); //disables HEAD /terms/{id}/years/rel/{fk}
+  // Term.disableRemoteMethodByName("prototype.__link__years"); //disable PUT /terms/{id}/years/rel/{fk}
+  // Term.disableRemoteMethodByName("prototype.__unlink__years"); //disable DELETE /terms/{id}/years/rel/{fk}
 };

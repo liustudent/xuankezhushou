@@ -7,7 +7,7 @@
   },
   "properties": {
     "year": {
-      "type": "number"
+      "type": "string"
     }
   },
   "validations": [],

@@ -1,53 +1,123 @@
 "use strict";
+const { ObjectId } = require('mongodb');
+const app = require("../../server/server");
 
 module.exports = function (Professor) {
   Professor.searchCourseByProf = function (
     ltx_school_id,
     prof_id,
     user_id,
-    error_test,
     cb
   ) {
-    if (error_test) {
+    if (!ltx_school_id || !prof_id || !user_id) {
       let errObj = new Error();
-      if (error_test == 1) {
-        errObj.name = "Invalid user";
-        errObj.message = "Invalid user";
-        errObj.status = 410;
-        return cb(errObj);
-      } else if (error_test == 2) {
-        errObj.name = "Invalid school";
-        errObj.message = "Invalid school";
-        errObj.status = 411;
-        return cb(errObj);
-      } else if (error_test == 3) {
-        errObj.name = "Invalid professor";
-        errObj.message = "Invalid professor";
-        errObj.status = 415;
-        return cb(errObj);
-      } else if (error_test == 4) {
-        errObj.name = "Empty list but it should not be empty";
-        errObj.message = "Empty list but it should not be empty";
-        errObj.status = 420;
-        return cb(errObj);
-      } else {
-        errObj.name = "Invalid error test";
-        errObj.message = "Invalid error test";
-        errObj.status = 499;
-        return cb(errObj);
-      }
+      errObj.name = "Empty field";
+      errObj.message = "Empty field";
+      errObj.status = 422;
+      errObj.stack = ""
+      return cb(errObj);
     }
-    let template = [
-      {
-        course_id: "603502e021778663b01a974f",
-        course_name_with_num: "COMPSCI 171"
-      },
-      {
-        course_id: "603502e021778663b01a974f",
-        course_name_with_num: "COMPSCI 177"
-      },
-    ];
-    return cb(null, template);
+
+    let schoolId;
+    let userValidation = new Promise((resolve, reject) => {
+      app.models.User.findOne(
+        {
+          where: {"ltx_userid": user_id}
+        },
+        function(err, userInstance){
+          if(err || !userInstance){
+            let errObj = new Error();
+            errObj.name = "Invalid user id";
+            errObj.message = "Invalid user id";
+            errObj.status = 410;
+            errObj.stack = ""
+            reject(errObj)
+          }else{
+            resolve(true)
+          }
+        }
+      )
+    })
+    let schoolValidation = new Promise((resolve, reject) => {
+      app.models.School.findOne(
+        {
+          where: {"ltx_school_id": ltx_school_id}
+        },
+        function(err, schoolInstance){
+          if(err || !schoolInstance){
+            let errObj = new Error();
+            errObj.name = "Invalid school id";
+            errObj.message = "Invalid school id";
+            errObj.status = 410;
+            errObj.stack = ""
+            reject(errObj)
+          }else{
+            schoolId = schoolInstance.id;
+            resolve(true)
+          }
+        }
+      )
+    })
+
+    Promise.all([userValidation, schoolValidation])
+    .then(()=>{
+      let tempCourseNameIds = new Set();
+      
+      new Promise((resolveOut, rejectOut)=>{
+        app.models.Proflink.find(
+          {
+            where: {'school_id': ObjectId(schoolId), 'prof_id':ObjectId(prof_id)}
+          },
+          function(err, courseInstance){
+            if(err){
+              rejectOut(err);
+            }else{
+              if(courseInstance){
+                courseInstance.forEach(course => {
+                  tempCourseNameIds.add(course.courseName_id.toString())
+                });
+                resolveOut(true);
+              }
+            }
+          }
+        )
+      })
+      .then(()=>{
+        let result = []
+        tempCourseNameIds = Array.from(tempCourseNameIds)
+        console.log(tempCourseNameIds)
+        new Promise((resolveIn, rejectIn)=> {
+          app.models.CourseName.find(
+            {
+              where: {id:{inq: tempCourseNameIds}}
+            },
+            function(err, courseNameInstance){
+              if(err){
+                rejectIn(err)
+              }else{
+                if(courseNameInstance){
+                  console.log(courseNameInstance)
+                  courseNameInstance.forEach(cni => {
+                    let temp = {
+                      course_id: cni.id,
+                      course_name_with_num: cni.name
+                    }
+                    result.push(temp)
+                  });
+                  resolveIn(true)
+                }
+              }
+            }
+          )
+        })
+        .then(()=>{
+          return cb(null, result)
+        })    
+      })
+    })
+    .catch((errObj)=>{
+      return cb(errObj)
+    })
   };
 
   Professor.remoteMethod("searchCourseByProf", {
@@ -71,12 +141,7 @@ module.exports = function (Professor) {
         type: "string",
         required: true,
         description: "用户ID",
-      },
-      {
-        arg: "error_test",
-        type: "number",
-        required: false,
-      },
+      }
     ],
     returns: { arg: "result", type: "array" },
   });

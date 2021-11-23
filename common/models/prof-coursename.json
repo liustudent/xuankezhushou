@@ -1,0 +1,40 @@
+{
+    "name": "proflink",
+    "base": "PersistedModel",
+    "idInjection": true,
+    "options": {
+      "validateUpsert": true
+    },
+    "properties": {
+      "name":{
+        "type": "string"
+      }
+    },
+    "validations": [],
+    "relations": {
+      "school": {
+        "type": "belongsTo",
+        "model": "school",
+        "foreignKey": "school_id"
+      },
+      "course_name": {
+        "type": "belongsTo",
+        "model": "course_name",
+        "foreignKey": "course_name_id"
+      },
+      "professor": {
+        "type": "belongsTo",
+        "model": "professor",
+        "foreignKey": "professor_id"
+      }
+    },
+    "acls": [
+      {
+        "accessType": "*",
+        "principalType": "ROLE",
+        "principalId": "$everyone",
+        "permission": "DENY"
+      }
+    ],
+    "methods": {}
+  }

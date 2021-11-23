@@ -1,46 +1,78 @@
 "use strict";
-
+const app = require("../../server/server");
+const { ObjectId } = require('mongodb');
 module.exports = function (Department) {
-  Department.getCourseNames = function (dept_id, user_id, error_test, cb) {
-    if (error_test) {
+  Department.getCourseNames = function (dept_id, user_id, cb) {
+    // 空串错误检测
+    if (!user_id || !dept_id){
       let errObj = new Error();
-      if (error_test == 1) {
-        errObj.name = "Invalid user";
-        errObj.message = "Invalid user";
-        errObj.status = 410;
-        return cb(errObj);
-      } else if (error_test == 2) {
-        errObj.name = "Invalid department";
-        errObj.message = "Invalid department";
-        errObj.status = 412;
-        return cb(errObj);
-      } else if (error_test == 3) {
-        errObj.name = "Empty list but it should not be empty";
-        errObj.message = "Empty list but it should not be empty";
-        errObj.status = 420;
-        return cb(errObj);
-      } else {
-        errObj.name = "Invalid error test";
-        errObj.message = "Invalid error test";
-        errObj.status = 499;
-        return cb(errObj);
-      }
+      errObj.name = "Invalid Query!";
+      errObj.message = "Invalid Query!";
+      errObj.status = 410;
+      errObj.stack = ""
+      return cb(errObj);
     }
-    let template = [
-      {
-        course_name_id: "1",
-        course_name: "COMPSCI 105",
-        description: "ADV PROD C  ",
-        enrolled_percent: "77.00",
-      },
-      {
-        course_name_id: "2",
-        course_name: "COMPSCI 105",
-        description: "ADV PROD C  ",
-        enrolled_percent: "77.00",
-      },
-    ];
-    return cb(null, template);
+    // 无效数据检测
+    let userValidation = new Promise((resolve, reject) => {
+      app.models.User.findOne(
+        {
+          where: {"ltx_userid": user_id}
+        },
+        function(err, userInstance){
+          if(err || !userInstance){
+            let errObj = new Error();
+            errObj.name = "Invalid user id";
+            errObj.message = "Invalid user id";
+            errObj.status = 410;
+            errObj.stack = ""
+            reject(errObj)
+          }else{
+            resolve(true)
+          }
+        }
+      )
+    })
+
+    Promise.all([userValidation])
+    .then(()=>{
+      // 查询数据
+      let result = []
+      new Promise((resolve, reject) => {
+        app.models.CourseName.find(
+          {
+            where: {'department_id': dept_id}
+          },
+          function(err, courseNameInstance){
+            if(err){
+              reject(err)
+            }else{
+              if(courseNameInstance){
+                for(let i in courseNameInstance){
+                  let temp = {
+                    course_name_id: courseNameInstance[i].id,
+                    course_name: courseNameInstance[i].name,
+                    description: courseNameInstance[i].description,
+                    enrolled_percent: "65.00",
+                  }
+                  result.push(temp)
+                  if(i==courseNameInstance.length-1){
+                    resolve(true)
+                  }
+                }
+              }
+            }
+          }
+        )
+      })
+      .then(()=>{
+        return cb(null, result)
+      })
+
+
+    })
+    .catch((errObj)=>{
+      return cb(errObj)
+    })
   };
 
   Department.remoteMethod("getCourseNames", {
@@ -59,12 +91,7 @@ module.exports = function (Department) {
         type: "string",
         required: true,
         description: "用户ID",
-      },
-      {
-        arg: "error_test",
-        type: "number",
-        required: false,
-      },
+      }
     ],
     returns: { arg: "result", type: "array" },
   });

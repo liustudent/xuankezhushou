@@ -13,16 +13,13 @@
     "is_online": {
       "type": "boolean"
     },
-    "need_textbook": {
-      "type": "boolean"
-    },
     "course_difficulty": {
       "type": "number"
     },
     "course_recommend": {
       "type": "number"
     },
-    "prof_rate": {
+    "prof_difficulty": {
       "type": "number"
     },
     "prof_recommend": {
@@ -31,16 +28,17 @@
     "content": {
       "type": "string"
     },
-    "mandatary": {
+    "is_attendace": {
       "type": "boolean"
     },
     "grade_received": {
       "type": "string"
     },
-    "selected_labels": {
+    "chosen_labels": {
       "type": [
         "string"
-      ]
+      ],
+      "default": []
     },
     "thumbs_up": {
       "type": "number",
@@ -49,6 +47,16 @@
     "thumbs_down": {
       "type": "number",
       "default": 0
+    },
+    "reported":{
+      "type": "boolean",
+      "default": false
+    },
+    "thumbed":{
+      "type": [
+        "string"
+      ],
+      "default": []
     }
   },
   "validations": [],
@@ -62,6 +70,11 @@
       "type": "belongsTo",
       "model": "course_name",
       "foreignKey": "course_name_id"
+    },
+    "user": {
+      "type": "belongsTo",
+      "model": "user",
+      "foreignKey": "user_id"
     }
   },
   "acls": [

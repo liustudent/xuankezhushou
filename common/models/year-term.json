@@ -6,9 +6,17 @@
     "validateUpsert": true
   },
   "properties": {
-    "school_term_id": {
-      "type": "string"
+    "term_id": {
+      "type": "string",
+      "mongodb": { "dataType": "ObjectId" },
+      "required": true
+    },
+    "year_id": {
+      "type": "string",
+      "mongodb": { "dataType": "ObjectId" },
+      "required": true
     }
+
   },
   "validations": [],
   "relations": {

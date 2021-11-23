@@ -1,28 +1,64 @@
 "use strict";
+const app = require("../../server/server");
+const { filter } = require("compression");
+const { ObjectId } = require('mongodb');
 
 module.exports = function (Review) {
-  Review.thumbsDown = function (review_id, user_id, error_test, cb) {
-    if (error_test) {
+  Review.thumbsDown = function (review_id, user_id, cb) {
+    if (!review_id && !user_id) {
       let errObj = new Error();
-      if (error_test == 1) {
-        errObj.name = "Invalid user";
-        errObj.message = "Invalid user";
-        errObj.status = 410;
-        return cb(errObj);
-      } else if (error_test == 2) {
-        errObj.name = "Invalid review";
-        errObj.message = "Invalid review";
-        errObj.status = 417;
-        return cb(errObj);
-      } else {
-        errObj.name = "Invalid error test";
-        errObj.message = "Invalid error test";
-        errObj.status = 499;
-        return cb(errObj);
-      }
+      errObj.name = "Empty field";
+      errObj.message = "Empty field";
+      errObj.status = 422;
+      errObj.stack = ""
+      return cb(errObj);
     }
-    let template = "success";
-    return cb(null, template);
+
+    let real_user_id;
+    let userValidation = new Promise((resolve, reject) => {
+      app.models.User.findOne(
+        {
+          where: {"ltx_userid": user_id}
+        },
+        function(err, userInstance){
+          if(err || !userInstance){
+            let errObj = new Error();
+            errObj.name = "Invalid user id";
+            errObj.message = "Invalid user id";
+            errObj.status = 410;
+            errObj.stack = ""
+            reject(errObj)
+          }else{
+            real_user_id = userInstance.id;
+            resolve(true)
+          }
+        }
+      )
+    })
+
+    Promise.all([userValidation])
+    .then(()=>{
+      Review.findById(
+        ObjectId(review_id),
+        function(err, reviewInstance){
+          if(err){
+            return cb(err)
+          }else{
+            if(reviewInstance){
+              if(!reviewInstance.thumbed.includes(real_user_id.toString())){
+                reviewInstance.thumbs_down = reviewInstance.thumbs_down+1;
+                reviewInstance.thumbed.push(real_user_id.toString())
+              }
+              reviewInstance.save()
+              return cb(null, "success")
+            }
+          }
+        }
+      )
+    })
+    .catch((errObj) => {
+      return cb(errObj)
+    })
   }
 
   Review.remoteMethod("thumbsDown", {
@@ -40,39 +76,64 @@ module.exports = function (Review) {
         type: "string",
         required: true,
         description: "用户ID",
-      },
-      {
-        arg: "error_test",
-        type: "number",
-        required: false,
-      },
+      }
     ],
     returns: { arg: "result", type: "string" },
   });
 
 
-  Review.report = function (review_id, user_id, error_test, cb) {
-    if (error_test) {
+  Review.report = function (review_id, user_id, cb) {
+    if (!review_id && !user_id) {
       let errObj = new Error();
-      if (error_test == 1) {
-        errObj.name = "Invalid user";
-        errObj.message = "Invalid user";
-        errObj.status = 410;
-        return cb(errObj);
-      } else if (error_test == 2) {
-        errObj.name = "Invalid review";
-        errObj.message = "Invalid review";
-        errObj.status = 417;
-        return cb(errObj);
-      } else {
-        errObj.name = "Invalid error test";
-        errObj.message = "Invalid error test";
-        errObj.status = 499;
-        return cb(errObj);
-      }
+      errObj.name = "Empty field";
+      errObj.message = "Empty field";
+      errObj.status = 422;
+      errObj.stack = ""
+      return cb(errObj);
     }
-    let template = "success";
-    return cb(null, template);
+
+    let real_user_id;
+    let userValidation = new Promise((resolve, reject) => {
+      app.models.User.findOne(
+        {
+          where: {"ltx_userid": user_id}
+        },
+        function(err, userInstance){
+          if(err || !userInstance){
+            let errObj = new Error();
+            errObj.name = "Invalid user id";
+            errObj.message = "Invalid user id";
+            errObj.status = 410;
+            errObj.stack = ""
+            reject(errObj)
+          }else{
+            real_user_id = userInstance.id;
+            resolve(true)
+          }
+        }
+      )
+    })
+
+    Promise.all([userValidation])
+    .then(()=>{
+      Review.findById(
+        ObjectId(review_id),
+        function(err, reviewInstance){
+          if(err){
+            return cb(err)
+          }else{
+            if(reviewInstance){
+              reviewInstance.reported = true;
+              reviewInstance.save()
+              return cb(null, "success")
+            }
+          }
+        }
+      )
+    })
+    .catch((errObj) => {
+      return cb(errObj)
+    })
   };
 
   Review.remoteMethod("report", {
@@ -90,38 +151,66 @@ module.exports = function (Review) {
         type: "string",
         required: true,
         description: "用户ID",
-      },
-      {
-        arg: "error_test",
-        type: "number",
-        required: false,
-      },
+      }
     ],
     returns: { arg: "result", type: "string" },
   });
 
-  Review.thumbsUp = function (review_id, user_id, error_test, cb) {
-    if (error_test) {
+  Review.thumbsUp = function (review_id, user_id, cb) {
+    if (!review_id && !user_id) {
       let errObj = new Error();
-      if (error_test == 1) {
-        errObj.name = "Invalid user";
-        errObj.message = "Invalid user";
-        errObj.status = 410;
-        return cb(errObj);
-      } else if (error_test == 2) {
-        errObj.name = "Invalid review";
-        errObj.message = "Invalid review";
-        errObj.status = 417;
-        return cb(errObj);
-      } else {
-        errObj.name = "Invalid error test";
-        errObj.message = "Invalid error test";
-        errObj.status = 499;
-        return cb(errObj);
-      }
+      errObj.name = "Empty field";
+      errObj.message = "Empty field";
+      errObj.status = 422;
+      errObj.stack = ""
+      return cb(errObj);
     }
-    let template = "success";
-    return cb(null, template);
+
+    let real_user_id;
+    let userValidation = new Promise((resolve, reject) => {
+      app.models.User.findOne(
+        {
+          where: {"ltx_userid": user_id}
+        },
+        function(err, userInstance){
+          if(err || !userInstance){
+            let errObj = new Error();
+            errObj.name = "Invalid user id";
+            errObj.message = "Invalid user id";
+            errObj.status = 410;
+            errObj.stack = ""
+            reject(errObj)
+          }else{
+            real_user_id = userInstance.id;
+            resolve(true)
+          }
+        }
+      )
+    })
+
+    Promise.all([userValidation])
+    .then(()=>{
+      Review.findById(
+        ObjectId(review_id),
+        function(err, reviewInstance){
+          if(err){
+            return cb(err)
+          }else{
+            if(reviewInstance){
+              if(!reviewInstance.thumbed.includes(real_user_id.toString())){
+                reviewInstance.thumbs_up = reviewInstance.thumbs_up+1;
+                reviewInstance.thumbed.push(real_user_id.toString())
+              }
+              reviewInstance.save()
+              return cb(null, "success")
+            }
+          }
+        }
+      )
+    })
+    .catch((errObj) => {
+      return cb(errObj)
+    })
   };
 
   Review.remoteMethod("thumbsUp", {
@@ -139,12 +228,7 @@ module.exports = function (Review) {
         type: "string",
         required: true,
         description: "用户ID",
-      },
-      {
-        arg: "error_test",
-        type: "number",
-        required: false,
-      },
+      }
     ],
     returns: { arg: "result", type: "string" },
   });
@@ -162,38 +246,70 @@ module.exports = function (Review) {
     is_attendance,
     grade_received,
     chosen_labels,
-    error_test,
     cb
   ) {
-    if (error_test) {
+    if (!coursename_id && !prof_id && !user_id && !course_difficulty && !course_reco && !prof_difficulty && !prof_reco) {
       let errObj = new Error();
-      if (error_test == 1) {
-        errObj.name = "Invalid user";
-        errObj.message = "Invalid user";
-        errObj.status = 410;
-        return cb(errObj);
-      } 
-      else if (error_test == 2) {
-        errObj.name = "Invalid course name";
-        errObj.message = "Invalid course name";
-        errObj.status = 413;
-        return cb(errObj);
-      } 
-      else if (error_test == 3) {
-        errObj.name = "Invalid professor";
-        errObj.message = "Invalid professor";
-        errObj.status = 415;
-        return cb(errObj);
-      } 
-      else {
-        errObj.name = "Invalid error test";
-        errObj.message = "Invalid error test";
-        errObj.status = 499;
-        return cb(errObj);
-      }
+      errObj.name = "Empty field";
+      errObj.message = "Empty field";
+      errObj.status = 422;
+      errObj.stack = ""
+      return cb(errObj);
     }
-    let template = "success";
-    return cb(null, template);
+    
+    if(chosen_labels) chosen_labels = JSON.parse(chosen_labels);
+
+    let real_user_id;
+    let userValidation = new Promise((resolve, reject) => {
+      app.models.User.findOne(
+        {
+          where: {"ltx_userid": user_id}
+        },
+        function(err, userInstance){
+          if(err || !userInstance){
+            let errObj = new Error();
+            errObj.name = "Invalid user id";
+            errObj.message = "Invalid user id";
+            errObj.status = 410;
+            errObj.stack = ""
+            reject(errObj)
+          }else{
+            real_user_id = userInstance.id;
+            resolve(true)
+          }
+        }
+      )
+    })
+
+    Promise.all([userValidation])
+    .then(()=>{
+      let reviewData = {
+        user_id: ObjectId(real_user_id),
+        coursename_id: ObjectId(coursename_id),
+        prof_id: ObjectId(prof_id),
+        is_online: is_online,
+        course_difficulty: course_difficulty,
+        course_recommend: course_reco,
+        prof_difficulty: prof_difficulty,
+        prof_recommend: prof_reco,
+        content: review,
+        is_attendance: is_attendance,
+        grade_received: grade_received,
+        chosen_labels: chosen_labels,
+      }
+
+      Review.findOrCreate(
+        {where: reviewData},
+        reviewData
+      )
+      .then(()=>{
+        return cb(null, "success")
+      })
+
+    })
+    .catch((errObj)=>{
+      return cb(errObj)
+    })
   };
 
   Review.remoteMethod("rateCourse", {
@@ -268,15 +384,10 @@ module.exports = function (Review) {
       },
       {
         arg: "chosen_labels",
-        type: "array",
+        type: "string",
         required: false,
         description: "已选择的标签",
-      },
-      {
-        arg: "error_test",
-        type: "number",
-        required: false,
-      },
+      }
     ],
     returns: { arg: "result", type: "string" },
   });

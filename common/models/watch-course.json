@@ -5,7 +5,16 @@
   "options": {
     "validateUpsert": true
   },
-  "properties": {},
+  "properties": {
+    "course_code": {
+      "type": "string",
+      "required": true
+    },
+    "course_status": {
+      "type": "string",
+      "required": true
+    }
+  },
   "validations": [],
   "relations": {
     "user": {

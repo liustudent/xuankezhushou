@@ -26,6 +26,11 @@
       "type": "hasMany",
       "model": "course_name",
       "foreignKey": "department_id"
+    },
+    "school": {
+      "type": "belongsTo",
+      "model": "school",
+      "foreignKey": "school_id"
     }
   },
   "acls": [

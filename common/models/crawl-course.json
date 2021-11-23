@@ -6,37 +6,35 @@
     "validateUpsert": true
   },
   "properties": {
+    "section": {
+      "type": "string"
+    },
     "name": {
       "type": "string"
     },
-    "dept_name": {
+    "course_number": {
       "type": "string"
     },
     "description": {
       "type": "string"
     },
-    "number": {
-      "type": "string"
-    },
-    "section": {
-      "type": "string"
-    },
     "course_code": {
-      "type": "string"
-    },
-    "place": {
       "type": "string"
     },
     "course_type": {
       "type": "string"
     },
-    "status": {
+    "class_day": {
       "type": "string"
     },
-    "class_day": {
-      "type": [
-        "string"
-      ]
+    "place": {
+      "type": "string"
+    },
+    "professor_name": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string"
     },
     "start_time": {
       "type": "string"

@@ -14,6 +14,10 @@
       "type": "string",
       "required": true
     },
+    "ltx_school_id": {
+      "type": "string",
+      "required": true
+    },
     "current_year": {
       "type": "string",
       "required": true
@@ -28,6 +32,11 @@
     "terms": {
       "type": "hasMany",
       "model": "term",
+      "foreignKey": "school_id"
+    },
+    "prof_coursename": {
+      "type": "hasMany",
+      "model": "prof_coursename",
       "foreignKey": "school_id"
     },
     "year_terms": {
@@ -78,7 +87,15 @@
       "principalId": "normal",
       "permission": "ALLOW",
       "property": "searchProfs"
+    },
+    {
+      "accessType": "*",
+      "principalType": "ROLE",
+      "principalId": "normal",
+      "permission": "ALLOW",
+      "property": "getTerms"
     }
+    
   ],
   "methods": {}
 }

@@ -35,6 +35,11 @@
       "model": "static_course",
       "foreignKey": "professor_id"
     },
+    "proflinks": {
+      "type": "hasMany",
+      "model": "proflink",
+      "foreignKey": "professor_id"
+    },
     "course_names": {
       "type": "hasMany",
       "model": "course_name",

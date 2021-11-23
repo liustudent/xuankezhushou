@@ -6,10 +6,19 @@
     "validateUpsert": true
   },
   "properties": {
-    "description": {
+    "year": {
+      "type": "string"
+    },
+    "term": {
       "type": "string"
     },
     "course_code": {
+      "type": "string"
+    },
+    "course_type": {
+      "type": "string"
+    },
+    "professor_name": {
       "type": "string"
     }
   },
@@ -29,6 +38,11 @@
       "type": "belongsTo",
       "model": "year_term",
       "foreignKey": "year_term_id"
+    },
+    "grade": {
+      "type": "hasOne",
+      "model": "grade",
+      "foreignKey": "static_course_id"
     }
   },
   "acls": [
