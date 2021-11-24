@@ -12,6 +12,7 @@ module.exports = function (Department) {
       errObj.stack = ""
       return cb(errObj);
     }
+    
     // 无效数据检测
     let userValidation = new Promise((resolve, reject) => {
       app.models.User.findOne(

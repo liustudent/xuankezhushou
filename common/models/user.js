@@ -84,7 +84,8 @@ module.exports = function (User) {
             if(err){
               reject(err)
             }else{
-              if(watchListInstance){
+              if(watchListInstance.length > 0){
+                console.log(watchListInstance)
                 for(let i in watchListInstance){
                   let course_id = watchListInstance[i].crawl_course_id;
                   // inner promise for fetching course details
@@ -130,10 +131,10 @@ module.exports = function (User) {
       .then(()=>{
         return cb(null, result)
       })
-      .catch((err)=>{return cb(err)})
+      .catch((err)=>{return cb(null, [])})
     })
     .catch((errObj)=>{
-      return cb(errObj)
+      return cb(null, [])
     })
     
   };

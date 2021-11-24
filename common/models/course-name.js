@@ -24,6 +24,7 @@ module.exports = function (CourseName) {
         },
         function(err, userInstance){
           if(err || !userInstance){
+            console.log(err, userInstance)
             let errObj = new Error();
             errObj.name = "Invalid user id";
             errObj.message = "Invalid user id";
