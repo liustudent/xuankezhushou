@@ -12,13 +12,31 @@
     "term": {
       "type": "string"
     },
-    "course_code": {
+    "course_num": {
       "type": "string"
     },
     "course_type": {
       "type": "string"
     },
     "professor_name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "class_day": {
+      "type": "string"
+    },
+    "start_time": {
+      "type": "string"
+    },
+    "end_time": {
+      "type": "string"
+    },
+    "place": {
+      "type": "string"
+    },
+    "capacity": {
       "type": "string"
     }
   },
@@ -29,7 +47,7 @@
       "model": "professor",
       "foreignKey": "professor_id"
     },
-    "course_name": {
+    "coursename_id": {
       "type": "belongsTo",
       "model": "course_name",
       "foreignKey": "course_name_id"

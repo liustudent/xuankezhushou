@@ -57,11 +57,12 @@ module.exports = function (StaticCourse) {
               reject(err);
             }else{
               if(courseInstance){
+                // console.log(courseInstance)
                 result.coursename_id = courseInstance.courseName_id;
                 result.description = courseInstance.description;
                 result.prof_id = courseInstance.professor_id;
                 result.professor_name = courseInstance.professor_name;
-                result.course_name = courseInstance.name;
+                result.course_name = courseInstance.course_name;
                 result.class_day = courseInstance.class_day;
                 result.start_time = courseInstance.start_time;
                 result.end_time = courseInstance.end_time;
@@ -196,7 +197,7 @@ module.exports = function (StaticCourse) {
 
       Promise.all([gradesPromise, reviewsPromise])
       .then(()=>{
-        console.log(result)
+        // console.log(result)
         return cb(null, result);
       })
       .catch((err)=>{
