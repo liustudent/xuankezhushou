@@ -5,11 +5,11 @@ const { all } = require("../../server/server");
 
 module.exports = function (CrawlCourse) {
   CrawlCourse.getCrawledCourseDetails = function (
-    crawlcourse_id,
+    crawl_course_id,
     user_id,
     cb
   ) {
-    if (!user_id||!crawlcourse_id) {
+    if (!user_id||!crawl_course_id) {
       let errObj = new Error();
       errObj.name = "Empty field";
       errObj.message = "Empty field";
@@ -43,11 +43,11 @@ module.exports = function (CrawlCourse) {
     
     Promise.all([userValidation])
     .then(()=>{
-      let result = {crawl_course_id: crawlcourse_id}
+      let result = {crawl_course_id: crawl_course_id}
       // fetch grades
       let gradesPromise = new Promise((resolve, reject)=>{
         CrawlCourse.findById(
-          crawlcourse_id,
+          crawl_course_id,
           function(err, courseInstance){
             if(err){
               reject(err);
@@ -194,7 +194,7 @@ module.exports = function (CrawlCourse) {
       let followedPromise = new Promise((resolve5, reject5)=>{
         app.models.WatchCourse.findOne(
           {
-            where: {"user_id":ObjectId(real_user_id), "crawl_course_id":ObjectId(crawlcourse_id)}
+            where: {"user_id":ObjectId(real_user_id), "crawl_course_id":ObjectId(crawl_course_id)}
           },
           function(err, watchInstance){
             if(err){
@@ -230,11 +230,11 @@ module.exports = function (CrawlCourse) {
 
   CrawlCourse.remoteMethod("getCrawledCourseDetails", {
     description:
-      "6-6 获取爬取课程详情, 该API用于6-6页面来获取爬取课程详情，请求需要包含“6-4获取课程所有分节”请求返回的crawlcourse_id，返回值包含一个状态code和data。",
+      "6-6 获取爬取课程详情, 该API用于6-6页面来获取爬取课程详情，请求需要包含“6-4获取课程所有分节”请求返回的crawl_course_id，返回值包含一个状态code和data。",
     http: { path: "/getCrawledCourseDetails", verb: "post" },
     accepts: [
       {
-        arg: "crawlcourse_id",
+        arg: "crawl_course_id",
         type: "string",
         required: true,
         description: "爬取课程ID",
