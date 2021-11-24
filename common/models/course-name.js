@@ -62,7 +62,7 @@ module.exports = function (CourseName) {
                       class_day: course['class_day'],
                       start_time: course['start_time'],
                       end_time: course['end_time'],
-                      enrolled_precent: course['enrolled_percent'],
+                      enrolled_percent: course['enrolled_percent'],
                       course_type: course['course_type'],
                     }
                     result.push(temp);
