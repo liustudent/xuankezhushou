@@ -106,14 +106,14 @@ module.exports = function (StaticCourse) {
                                 result.course_grades = course_grades;
                               }
                               if (i==gradeListInstance.length-1){
-                                all_grades.gpa_avg /= gradeListInstance.length;
-                                all_grades.grade_a_count /= gradeListInstance.length;
-                                all_grades.grade_b_count /= gradeListInstance.length;
-                                all_grades.grade_c_count /= gradeListInstance.length;
-                                all_grades.grade_d_count /= gradeListInstance.length;
-                                all_grades.grade_f_count /= gradeListInstance.length;
-                                all_grades.grade_p_count /= gradeListInstance.length;
-                                all_grades.grade_np_count /= gradeListInstance.length;
+                                all_grades.gpa_avg = (all_grades.gpa_avg/gradeListInstance.length).toFixed(2);
+                                all_grades.grade_a_count = (all_grades.grade_a_count/gradeListInstance.length).toFixed(0);
+                                all_grades.grade_b_count = (all_grades.grade_b_count/gradeListInstance.length).toFixed(0);
+                                all_grades.grade_c_count = (all_grades.grade_c_count/gradeListInstance.length).toFixed(0);
+                                all_grades.grade_d_count = (all_grades.grade_d_count/gradeListInstance.length).toFixed(0);
+                                all_grades.grade_f_count = (all_grades.grade_f_count/gradeListInstance.length).toFixed(0);
+                                all_grades.grade_p_count = (all_grades.grade_p_count/gradeListInstance.length).toFixed(0);
+                                all_grades.grade_np_count = (all_grades.grade_np_count/gradeListInstance.length).toFixed(0);
                                 result.all_grades = all_grades;
                                 resolve2(true)
                               }

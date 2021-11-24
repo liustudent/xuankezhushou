@@ -257,7 +257,7 @@ module.exports = function (Review) {
       return cb(errObj);
     }
     
-    if(chosen_labels) chosen_labels = JSON.parse(chosen_labels);
+    if(chosen_labels) chosen_labels = chosen_labels.split(",");
 
     let real_user_id;
     let userValidation = new Promise((resolve, reject) => {
