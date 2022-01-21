@@ -1,8 +1,8 @@
 {
   "liu": {
-    "url": "mongodb+srv://liustudentdev:DVCrV7OHQqQkr7Dt@liustudentdev.gxntv.mongodb.net/LiuStudentDev?retryWrites=true&w=majority",
+    "url": "mongodb+srv://liustudentdev:VyjiDGU2cJtXJ1yV@liustudentdev.gxntv.mongodb.net/LiuStudentDev?retryWrites=true&w=majority",
     "database": "LiuStudentDev",
-    "password": "DVCrV7OHQqQkr7Dt",
+    "password": "VyjiDGU2cJtXJ1yV",
     "name": "liu",
     "user": "liustudentdev",
     "connector": "mongodb"
