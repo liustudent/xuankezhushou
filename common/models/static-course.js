@@ -33,7 +33,7 @@ module.exports = function (StaticCourse) {
             errObj.stack = ""
             reject(errObj)
           }else{
-            real_user_id = userInstance.id;
+            let real_user_id = userInstance.id;
             resolve(true)
           }
         }
@@ -56,6 +56,7 @@ module.exports = function (StaticCourse) {
             if(err){
               reject(err);
             }else{
+              // console.log(courseInstance)
               if(courseInstance){
                 // console.log(courseInstance)
                 result.coursename_id = courseInstance.courseName_id;
@@ -133,7 +134,9 @@ module.exports = function (StaticCourse) {
                   )
                 })
                 .then(()=>{
+
                   resolve(true)
+                  
                 })
                 .catch((err)=>{
                   return cb(err)
@@ -145,6 +148,8 @@ module.exports = function (StaticCourse) {
           }
         )
       })
+      
+
 
       // fetch reviews
       let reviewsPromise = new Promise((resolve3, reject3)=>{
@@ -157,7 +162,7 @@ module.exports = function (StaticCourse) {
             if(err){
               reject3(err);
             }else{
-              if(reviewListInstance){
+              if(reviewListInstance.length > 0){
                 new Promise((resolve4, reject4)=>{
                   for(let j in reviewListInstance){
                     let reviewInstance = reviewListInstance[j];
@@ -188,16 +193,17 @@ module.exports = function (StaticCourse) {
                   return cb(err)
                 })
               }else{
-                reject3("NOT FOUND!")
+                resolve3(true)
               }
             }
           }
         )
       })
-
+      
       Promise.all([gradesPromise, reviewsPromise])
       .then(()=>{
         // console.log(result)
+        result.reviews = []
         return cb(null, result);
       })
       .catch((err)=>{
